@@ -81,6 +81,42 @@
     "source": "Credit Union"
   },
   {
+    "date": "2026-02-04",
+    "description": "ELEVENLABS.IO",
+    "amount": 11.73,
+    "category": "Subscriptions",
+    "who": "Bob",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-02-04",
+    "description": "MCDONALD'S COLLEGE STATION",
+    "amount": 12.85,
+    "category": "Dining",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-02-04",
+    "description": "STELLA'S DONUTS Bryan",
+    "amount": 21.74,
+    "category": "Dining",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-02-04",
+    "description": "WWW.SIMLI.COM (AI Avatar)",
+    "amount": 10,
+    "category": "Subscriptions",
+    "who": "Bob",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
     "date": "2026-02-02",
     "description": "STONE CO CLIMBING STONECOCLIMBI TX 02/01",
     "amount": 134.23,
@@ -106,6 +142,15 @@
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-02",
+    "description": "WINDMILL RETAIL LLC Bryan",
+    "amount": 43.3,
+    "category": "Shopping",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
   },
   {
     "date": "2026-02-01",
@@ -360,6 +405,24 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-01-22",
+    "description": "SUNO INC. (AI Music)",
+    "amount": 103.92,
+    "category": "Subscriptions",
+    "who": "Bob",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-01-22",
+    "description": "TWIN LIQUORS #87",
+    "amount": 64.28,
+    "category": "Shopping",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
     "date": "2026-01-21",
     "description": "PAYPAL INST XFER QUICKBOOKS WEB ID",
     "amount": 40.51,
@@ -423,6 +486,24 @@
     "source": "CC 9438"
   },
   {
+    "date": "2026-01-17",
+    "description": "CHEVRON COLLEGE STATION",
+    "amount": 19.46,
+    "category": "Transportation",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-01-17",
+    "description": "SPIRIT ICE ARENA",
+    "amount": 112.53,
+    "category": "Entertainment",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
     "date": "2026-01-16",
     "description": "AMERICAN EXPRESS ACH PMT M8358 WEB ID",
     "amount": 400,
@@ -448,6 +529,24 @@
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-16",
+    "description": "H-E-B #619 COLLEGE STATION",
+    "amount": 46.33,
+    "category": "Everyday",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
+    "date": "2026-01-16",
+    "description": "STONE CO CLIMBING",
+    "amount": 15.15,
+    "category": "Health & Fitness",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
   },
   {
     "date": "2026-01-15",
@@ -538,6 +637,15 @@
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "ASIAN BUFFET ARLINGTON",
+    "amount": 63.53,
+    "category": "Dining",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
   },
   {
     "date": "2026-01-12",
@@ -657,6 +765,15 @@
     "type": "expense"
   },
   {
+    "date": "2026-01-12",
+    "description": "SKILLMAN WOK ARLINGTON",
+    "amount": 24.19,
+    "category": "Dining",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
+  },
+  {
     "date": "2026-01-11",
     "description": "STEAK 'N SHAKE ARLINGTON",
     "amount": 15.04,
@@ -664,6 +781,15 @@
     "who": "Shared",
     "source": "Amex",
     "type": "expense"
+  },
+  {
+    "date": "2026-01-11",
+    "description": "JERSEY MIKES ARLINGTON",
+    "amount": 20.51,
+    "category": "Dining",
+    "who": "Shared",
+    "type": "expense",
+    "source": "Amex"
   },
   {
     "date": "2026-01-10",
