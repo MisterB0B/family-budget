@@ -72,6 +72,15 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-02-04",
+    "description": "XAI LLC X.AI/ABOUT (Grok)",
+    "amount": 50,
+    "category": "Subscriptions",
+    "type": "expense",
+    "who": "Bob",
+    "source": "Credit Union"
+  },
+  {
     "date": "2026-02-02",
     "description": "STONE CO CLIMBING STONECOCLIMBI TX 02/01",
     "amount": 134.23,
