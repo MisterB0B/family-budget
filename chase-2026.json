@@ -405,6 +405,15 @@
     "source": "Chase CC"
   },
   {
+    "date": "2026-01-17",
+    "description": "INTEREST CHARGE:PURCHASES (Card 9438)",
+    "amount": 47.86,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "CC 9438"
+  },
+  {
     "date": "2026-01-16",
     "description": "AMERICAN EXPRESS ACH PMT M8358 WEB ID",
     "amount": 400,
