@@ -1,0 +1,695 @@
+[
+  {
+    "date": "2026-02-07",
+    "description": "POS DEBIT SQ *WHISKEY CHARLIE'S ",
+    "amount": 179.66,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-07",
+    "description": "POS DEBIT TST* CASA DO BRASIL - C ",
+    "amount": 103.29,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-06",
+    "description": "PURCHASE INTEREST CHARGE",
+    "amount": 13.64,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-02-06",
+    "description": "H-E-B #619 COLLEGE STATI TX 962023 02/06",
+    "amount": 4.33,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-06",
+    "description": "UPSTART NETWORK RETURN FEE PPD ID",
+    "amount": 15,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-05",
+    "description": "AMZN Digital*BB4OH8AZ3",
+    "amount": 2.8,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-02-05",
+    "description": "AMZN Digital*6T4QQ3EN3",
+    "amount": 1.4,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-02-05",
+    "description": "CHASE CREDIT CRD AUTOPAY PPD ID",
+    "amount": 40,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-02",
+    "description": "STONE CO CLIMBING STONECOCLIMBI TX 02/01",
+    "amount": 134.23,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-02",
+    "description": "INSPIRE ROCK SPRING 2812887625 TX 01/29",
+    "amount": 34.65,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-02",
+    "description": "INSPIRE ROCK SPRING 2812887625 TX 01/29",
+    "amount": 30.32,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-02-01",
+    "description": "CRAIGSLIST.ORG",
+    "amount": 15,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-31",
+    "description": "AMAZON MKTPL*JG7XI1G83",
+    "amount": 19.47,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "GOOGLE *Chrome",
+    "amount": 5,
+    "category": "Entertainment",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "MCDONALD'S F21658",
+    "amount": 6.48,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "GITHUB  INC.",
+    "amount": 51.17,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "Prime Video *1814V5LE3",
+    "amount": 6.48,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "UPSTART NETWORK RETRY PYMT 28171652 WEB ID",
+    "amount": 830.4,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "SHELL OIL12979899015 TOMBALL TX 01/29",
+    "amount": 45.15,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "SHELL OIL12979899015 TOMBALL TX 01/29",
+    "amount": 10.26,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-30",
+    "description": "I-45 DINER SPRING TX 01/29",
+    "amount": 34.97,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-29",
+    "description": "H-E-B #746 COLLEGE STATI TX 332864 01/29",
+    "amount": 48.39,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-28",
+    "description": "Amazon.com*917YQ23O3",
+    "amount": 90.61,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-28",
+    "description": "AMAZON MKTPL*SF5LW3LV3",
+    "amount": 54.11,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-28",
+    "description": "HLU*HULUPLUS hulu.com/bill CA 01/28",
+    "amount": 108.24,
+    "category": "Entertainment",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-27",
+    "description": "AMAZON MKTPL*222HD8FX3",
+    "amount": 40.04,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-27",
+    "description": "MONTHLY SERVICE FEE",
+    "amount": 5,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "AMAZON MKTPL*KZ1780563",
+    "amount": 6.48,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "AMAZON MKTPL*KX57K3YL3",
+    "amount": 27,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "PROG COUNTY MUT INS PREM PPD ID",
+    "amount": 424.67,
+    "category": "Insurance",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "ROCKET MORTGAGE MTG PYMTS 3533376649 WEB ID",
+    "amount": 1157.09,
+    "category": "Home",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "PAYPAL INST XFER NINJATECHAI WEB ID",
+    "amount": 6.55,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "PROG CASUALTY RETRY PYMT PPD ID",
+    "amount": 211.43,
+    "category": "Insurance",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-26",
+    "description": "MONTEREY FIN SVC MFS PAYMNT PPD ID",
+    "amount": 559.6,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-23",
+    "description": "Zelle payment to Kelly Ansari 27805349367",
+    "amount": 450,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-23",
+    "description": "H-E-B #619 COLLEGE STATI TX 966974 01/23",
+    "amount": 128.35,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-21",
+    "description": "PAYPAL INST XFER QUICKBOOKS WEB ID",
+    "amount": 40.51,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "Audible*JH0Y76RT3",
+    "amount": 16.18,
+    "category": "Utilities",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "AMAZON MKTPL*2O5DD3MX3",
+    "amount": 1.33,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "PAYPAL INST XFER HBOMAX HELP.HBO WEB ID",
+    "amount": 11.73,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "CHASE CREDIT CRD AUTOPAY PPD ID",
+    "amount": 70,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-19",
+    "description": "PURCHASE INTEREST CHARGE",
+    "amount": 49.8,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-16",
+    "description": "AMERICAN EXPRESS ACH PMT M8358 WEB ID",
+    "amount": 400,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-16",
+    "description": "ROCKET MORTGAGE MTG PYMTS 3533376649 WEB ID",
+    "amount": 1000,
+    "category": "Home",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-16",
+    "description": "FIFTH THIRD BANK WEB PAY 949701142026 WEB ID",
+    "amount": 640.42,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-15",
+    "description": "AMAZON MKTPL*EL37Z84O3",
+    "amount": 10.81,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-15",
+    "description": "PAYPAL INST XFER GOOGLE YOUTUBE WEB ID",
+    "amount": 22.99,
+    "category": "Entertainment",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-14",
+    "description": "PAYPAL INST XFER LIVEPLAN WEB ID",
+    "amount": 2.99,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-14",
+    "description": "CITI AUTOPAY PAYMENT 291908553550079 WEB ID",
+    "amount": 283.8,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-14",
+    "description": "TACO BELL 034591 ITALY TX 01/13",
+    "amount": 16.2,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "QT 947 OUTSIDE ARLINGTON TX 082566 01/13",
+    "amount": 52.03,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "A-PLAYERSTECH LT IAT PAYPAL 1047582527184 WEB ID",
+    "amount": 39.99,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "PAYPAL INST XFER NINJATECHAI WEB ID",
+    "amount": 15,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "PAYPAL RETRY PYMT WEB ID",
+    "amount": 206,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-13",
+    "description": "QT 947 ARLINGTON TX 01/12",
+    "amount": 23.79,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "AMAZON MKTPL*1R1CS6KD3",
+    "amount": 27.05,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "Prime Video Channels",
+    "amount": 6.48,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "Amazon Digit*BJ1HP3U33",
+    "amount": 11.9,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "Zelle payment to Elle yenny 27677505436",
+    "amount": 400,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "Zelle payment to Kelly Ansari 27677090948",
+    "amount": 450,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "APPLECARD GSBANK PAYMENT 12857400 WEB ID",
+    "amount": 684.32,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "CAPITAL ONE CRCARDPMT CA0C18199BB4B4E WEB ID",
+    "amount": 68,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "AMERICAN EXPRESS ACH PMT M3552 WEB ID",
+    "amount": 300,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "BALLPARK BEVERAGE ARLINGTON TX 501417 01/11",
+    "amount": 29.38,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "GM Financial GMF Pymt 111094086314 WEB ID",
+    "amount": 426.17,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "TST* SPITZ RESTAURANT G FRISCO TX 01/10",
+    "amount": 12.99,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-12",
+    "description": "TST* SPITZ RESTAURANT G FRISCO TX 01/10",
+    "amount": 24.65,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-09",
+    "description": "SPO*WILDPITCHSPORTSBAR&amp;GR",
+    "amount": 84.34,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-09",
+    "description": "7-ELEVEN 34536",
+    "amount": 17.51,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-09",
+    "description": "UPSTART NETWORK RETURN FEE PPD ID",
+    "amount": 15,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-07",
+    "description": "KROGER #0546",
+    "amount": 107.5,
+    "category": "Everyday",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-05",
+    "description": "PADDLE.COM MARKE IAT PAYPAL 1047375491185 WEB ID",
+    "amount": 25,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-03",
+    "description": "LOVE'S #0628 OUTSIDE",
+    "amount": 51.17,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-03",
+    "description": "LOVE'S #0628 INSIDE",
+    "amount": 4.86,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-03",
+    "description": "7-ELEVEN 42164",
+    "amount": 43.76,
+    "category": "Transportation",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-02",
+    "description": "STONE CO CLIMBING STONECOCLIMBI TX 01/01",
+    "amount": 134.23,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-02",
+    "description": "UPSTART NETWORK RETRY PYMT 28171652 WEB ID",
+    "amount": 830.4,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  }
+]

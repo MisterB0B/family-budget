@@ -371,7 +371,10 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">Recent Transactions</span>
-                        <button class="btn btn-sm btn-secondary" onclick="showModal('importCSV')">📥 Import</button>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-sm btn-secondary" onclick="showModal('importCSV')">📥 CSV</button>
+                            <button class="btn btn-sm btn-secondary" onclick="loadChaseJSON()">🏦 Chase</button>
+                        </div>
                     </div>
                     <div id="recentTransactions"></div>
                 </div>
@@ -1149,6 +1152,33 @@
             document.getElementById('importPreview').style.display = 'none';
             csvInput.value = '';
             pendingImport = [];
+        }
+
+        // ========== CHASE JSON IMPORT ==========
+        async function loadChaseJSON() {
+            try {
+                const resp = await fetch('chase-2026.json');
+                if (!resp.ok) throw new Error('Failed to fetch');
+                const transactions = await resp.json();
+                
+                // Check for duplicates
+                const existing = new Set(data.transactions.map(t => `${t.date}-${t.description}-${t.amount}`));
+                const newTx = transactions.filter(t => !existing.has(`${t.date}-${t.description}-${t.amount}`));
+                
+                if (newTx.length === 0) {
+                    alert('All transactions already imported!');
+                    return;
+                }
+                
+                if (!confirm(`Import ${newTx.length} Chase transactions?`)) return;
+                
+                data.transactions.push(...newTx);
+                saveData();
+                renderAll();
+                alert(`Imported ${newTx.length} transactions!`);
+            } catch (e) {
+                alert('Error loading Chase data: ' + e.message);
+            }
         }
 
         // ========== INIT ==========
