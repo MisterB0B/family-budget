@@ -189,6 +189,15 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-01-30",
+    "description": "MONTHLY SERVICE FEE",
+    "amount": 15,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
     "date": "2026-01-29",
     "description": "H-E-B #746 COLLEGE STATI TX 332864 01/29",
     "amount": 48.39,
@@ -324,10 +333,55 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-01-22",
+    "description": "PURCHASE INTEREST CHARGE",
+    "amount": 402.69,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-22",
+    "description": "OVERDRAFT FEE FOR A $16.99 RECURRING CARD PURCHASE",
+    "amount": 34,
+    "category": "Subscriptions",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
     "date": "2026-01-21",
     "description": "PAYPAL INST XFER QUICKBOOKS WEB ID",
     "amount": 40.51,
     "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-21",
+    "description": "ATMOS ENERGY",
+    "amount": 169.15,
+    "category": "Utilities",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase CC"
+  },
+  {
+    "date": "2026-01-21",
+    "description": "OVERDRAFT FEE FOR A $92.00 ITEM - DETAILS: ORIG CO",
+    "amount": 34,
+    "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-21",
+    "description": "ZOOM.COM 888-799-9666 ZOOM.US CA 01/20",
+    "amount": 16.99,
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -364,6 +418,24 @@
     "description": "CHASE CREDIT CRD AUTOPAY PPD ID",
     "amount": 70,
     "category": "Debt",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "ORIG CO NAME:CHASE CREDIT CRD ORIG ID:476003",
+    "amount": 627,
+    "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-20",
+    "description": "ORIG CO NAME:HOME DEPOT ORIG ID:CITIAU",
+    "amount": 92,
+    "category": "Home",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -423,6 +495,15 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-01-15",
+    "description": "OVERDRAFT FEE FOR A $11.99 ITEM - DETAILS: ORIG CO",
+    "amount": 34,
+    "category": "Subscriptions",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
     "date": "2026-01-14",
     "description": "PAYPAL INST XFER LIVEPLAN WEB ID",
     "amount": 2.99,
@@ -445,6 +526,24 @@
     "description": "TACO BELL 034591 ITALY TX 01/13",
     "amount": 16.2,
     "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-14",
+    "description": "ORIG CO NAME:PAYPAL ORIG ID:PAYPAL",
+    "amount": 11.99,
+    "category": "Subscriptions",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-14",
+    "description": "RING STANDARD PLAN RING.COM CA 01/14",
+    "amount": 108.24,
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -688,6 +787,15 @@
     "description": "UPSTART NETWORK RETRY PYMT 28171652 WEB ID",
     "amount": 830.4,
     "category": "Other",
+    "type": "expense",
+    "who": "Shared",
+    "source": "Chase Bank"
+  },
+  {
+    "date": "2026-01-02",
+    "description": "ORIG CO NAME:PAYPAL ORIG ID:PAYPAL",
+    "amount": 10,
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
