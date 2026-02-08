@@ -80,10 +80,10 @@
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
-            color: var(--text-secondary); cursor: pointer; padding: 8px 12px;
-            font-size: 0.75rem; transition: all 0.2s;
+            color: var(--text-secondary); cursor: pointer; padding: 8px 8px;
+            font-size: 0.7rem; transition: all 0.2s;
         }
-        .nav-item .icon { font-size: 1.4rem; margin-bottom: 4px; }
+        .nav-item .icon { font-size: 1.3rem; margin-bottom: 2px; }
         .nav-item.active { color: var(--accent); }
         .nav-item:hover { color: var(--text-primary); }
 
@@ -109,12 +109,24 @@
             background: var(--bg-secondary);
             padding: 12px; border-radius: 10px; text-align: center;
         }
-        .stat-mini .value { font-size: 1.4rem; font-weight: 700; }
-        .stat-mini .label { font-size: 0.75rem; color: var(--text-secondary); }
+        .stat-mini .value { font-size: 1.3rem; font-weight: 700; }
+        .stat-mini .label { font-size: 0.7rem; color: var(--text-secondary); }
+
+        /* Big stat cards */
+        .stat-big {
+            background: var(--bg-secondary);
+            padding: 20px; border-radius: 12px; text-align: center;
+            margin-bottom: 16px;
+        }
+        .stat-big .value { font-size: 2.5rem; font-weight: 700; }
+        .stat-big .label { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+        .stat-big.success .value { color: var(--success); }
+        .stat-big.danger .value { color: var(--danger); }
+        .stat-big.accent .value { color: var(--accent); }
 
         /* Progress */
         .progress-bar { height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
         .progress-fill.over { background: var(--danger); }
         .progress-fill.warning { background: var(--warning); }
 
@@ -135,6 +147,39 @@
         .list-item .content.done { text-decoration: line-through; opacity: 0.5; }
         .list-item .meta { font-size: 0.8rem; color: var(--text-secondary); }
         .list-item .delete { color: var(--danger); cursor: pointer; padding: 4px 8px; }
+
+        /* Debt Items */
+        .debt-item {
+            background: var(--bg-tertiary);
+            padding: 16px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--danger);
+        }
+        .debt-item.paid { border-left-color: var(--success); opacity: 0.6; }
+        .debt-item .debt-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .debt-item .debt-name { font-weight: 600; font-size: 1.1rem; }
+        .debt-item .debt-balance { font-weight: 700; font-size: 1.2rem; }
+        .debt-item .debt-details { display: flex; gap: 16px; color: var(--text-secondary); font-size: 0.85rem; }
+        .debt-item .debt-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+        /* Bonus Calculator */
+        .bonus-section {
+            background: linear-gradient(135deg, var(--accent-alt) 0%, var(--accent) 100%);
+            padding: 20px; border-radius: 12px; margin-bottom: 16px; color: var(--bg-primary);
+        }
+        .bonus-section h3 { margin-bottom: 12px; font-size: 1.2rem; }
+        .bonus-input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+        .bonus-input-group input {
+            flex: 1; padding: 12px; border: none; border-radius: 8px;
+            font-size: 1.2rem; font-weight: 600;
+        }
+        .bonus-input-group button {
+            padding: 12px 20px; background: var(--bg-primary); color: var(--accent);
+            border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+        }
+        .bonus-result { background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; }
+        .bonus-result h4 { margin-bottom: 12px; }
+        .bonus-result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .bonus-result-row:last-child { border-bottom: none; font-weight: 700; }
 
         /* Quick Add */
         .quick-add {
@@ -184,15 +229,6 @@
         .event-time { font-weight: 600; min-width: 60px; }
         .event-title { flex: 1; }
 
-        /* Reminder */
-        .reminder-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 8px;
-        }
-        .reminder-item.urgent { border-left: 4px solid var(--danger); }
-        .reminder-item.soon { border-left: 4px solid var(--warning); }
-        .reminder-date { font-size: 0.85rem; color: var(--text-secondary); }
-
         /* Forms */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-secondary); }
@@ -220,7 +256,7 @@
         .modal.show { display: flex; }
         .modal-content {
             background: var(--bg-secondary); padding: 24px; border-radius: 12px;
-            max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto;
+            max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
@@ -232,13 +268,12 @@
             cursor: pointer; transition: all 0.2s;
         }
         .budget-row:hover { background: var(--bg-secondary); transform: translateX(4px); }
-        .budget-row:active { transform: scale(0.98); }
         .budget-row .name { display: flex; align-items: center; gap: 8px; }
         .budget-row .amounts { text-align: right; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
         .budget-row .spent { color: var(--text-primary); }
         .budget-row .total { color: var(--text-secondary); }
         .budget-row .arrow { color: var(--text-secondary); font-size: 1.2rem; }
-        
+
         /* Category Detail */
         .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
         .category-header .icon { font-size: 2rem; }
@@ -266,6 +301,7 @@
         @media (max-width: 500px) {
             .stats-row { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
+            .debt-item .debt-details { flex-direction: column; gap: 4px; }
         }
     </style>
 </head>
@@ -310,12 +346,12 @@
                         <div class="label">Budget Left</div>
                     </div>
                     <div class="stat-mini">
-                        <div class="value" id="homeTodosCount">0</div>
-                        <div class="label">To-Dos</div>
+                        <div class="value" id="homeDebtTotal">$0</div>
+                        <div class="label">Total Debt</div>
                     </div>
                     <div class="stat-mini">
-                        <div class="value" id="homeEventsCount">0</div>
-                        <div class="label">This Week</div>
+                        <div class="value" id="homeTodosCount">0</div>
+                        <div class="label">To-Dos</div>
                     </div>
                 </div>
 
@@ -334,12 +370,43 @@
                     </div>
                     <div id="homeEvents"></div>
                 </div>
+            </div>
+
+            <!-- DEBT PAGE -->
+            <div id="page-debt" class="page">
+                <div class="bonus-section">
+                    <h3>💰 Bonus Deployment Calculator</h3>
+                    <div class="bonus-input-group">
+                        <input type="number" id="bonusAmount" placeholder="76000" value="76000">
+                        <button onclick="calculateBonus()">Calculate</button>
+                    </div>
+                    <div id="bonusResult" class="bonus-result" style="display:none;">
+                        <h4>🎯 Deployment Plan</h4>
+                        <div id="bonusBreakdown"></div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-mini">
+                        <div class="value" id="totalDebt" style="color:var(--danger);">$0</div>
+                        <div class="label">Total Debt</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="value" id="monthlyPayments">$0</div>
+                        <div class="label">Monthly Pmts</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="value" id="debtFreeDate">-</div>
+                        <div class="label">Debt Free</div>
+                    </div>
+                </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">🔔 Reminders</span>
+                        <span class="card-title">💳 Debts</span>
+                        <button class="btn btn-sm btn-primary" onclick="showModal('addDebt')">+ Add Debt</button>
                     </div>
-                    <div id="homeReminders"></div>
+                    <div id="debtList"></div>
                 </div>
             </div>
 
@@ -371,10 +438,7 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">Recent Transactions</span>
-                        <div style="display:flex;gap:8px;">
-                            <button class="btn btn-sm btn-secondary" onclick="showModal('importCSV')">📥 CSV</button>
-                            <button class="btn btn-sm btn-secondary" onclick="loadChaseJSON()">🏦 Chase</button>
-                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="loadChaseJSON()">🏦 Import</button>
                     </div>
                     <div id="recentTransactions"></div>
                 </div>
@@ -446,6 +510,10 @@
                 <span class="icon">🏠</span>
                 <span>Home</span>
             </div>
+            <div class="nav-item" data-page="debt">
+                <span class="icon">💳</span>
+                <span>Debt</span>
+            </div>
             <div class="nav-item" data-page="budget">
                 <span class="icon">💰</span>
                 <span>Budget</span>
@@ -466,6 +534,45 @@
     </div>
 
     <!-- MODALS -->
+    <div id="modal-addDebt" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Debt</h3>
+                <button class="modal-close" onclick="hideModal('addDebt')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Debt Name</label>
+                <input type="text" id="debtName" placeholder="e.g. Upstart Loan">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Balance</label>
+                    <input type="number" id="debtBalance" step="0.01" placeholder="15000">
+                </div>
+                <div class="form-group">
+                    <label>Interest Rate %</label>
+                    <input type="number" id="debtRate" step="0.1" placeholder="18.5">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Monthly Payment</label>
+                    <input type="number" id="debtPayment" step="0.01" placeholder="830">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="debtType">
+                        <option value="loan">Personal Loan</option>
+                        <option value="credit">Credit Card</option>
+                        <option value="auto">Auto Loan</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="addDebt()">Add Debt</button>
+        </div>
+    </div>
+
     <div id="modal-addTransaction" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -524,30 +631,7 @@
                     <input type="time" id="eventTime">
                 </div>
             </div>
-            <div class="form-group">
-                <label>Notes</label>
-                <textarea id="eventNotes" rows="2" placeholder="Optional notes"></textarea>
-            </div>
             <button class="btn btn-primary" style="width:100%;" onclick="addEvent()">Add Event</button>
-        </div>
-    </div>
-
-    <div id="modal-importCSV" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Import from Rocket Money</h3>
-                <button class="modal-close" onclick="hideModal('importCSV')">×</button>
-            </div>
-            <div id="importDropZone" style="border:2px dashed var(--bg-tertiary);border-radius:12px;padding:40px;text-align:center;cursor:pointer;">
-                <div style="font-size:2.5rem;margin-bottom:8px;">📄</div>
-                <p>Drop CSV here or tap to browse</p>
-                <input type="file" id="csvInput" accept=".csv" style="display:none;">
-            </div>
-            <div id="importPreview" style="display:none;margin-top:16px;">
-                <p><strong id="importCount">0</strong> transactions found</p>
-                <div id="importList" style="max-height:200px;overflow-y:auto;margin:12px 0;"></div>
-                <button class="btn btn-primary" style="width:100%;" onclick="confirmImport()">Import All</button>
-            </div>
         </div>
     </div>
 
@@ -585,10 +669,7 @@
 
     <script>
         // ========== AUTH ==========
-        const PINS = {
-            'Bob': '5454',
-            'Elle': '7837'
-        };
+        const PINS = { 'Bob': '5454', 'Elle': '7837' };
         let currentUser = null;
         let selectedUser = 'Bob';
 
@@ -631,48 +712,61 @@
 
         // ========== DATA ==========
         const DEFAULT_BUDGETS = [
-            { category: 'Everyday', budget: 4200, icon: '🛒' },
-            { category: 'Home', budget: 3500, icon: '🏠' },
-            { category: 'Transportation', budget: 1840, icon: '🚗' },
-            { category: 'Insurance', budget: 1640, icon: '🛡️' },
-            { category: 'Debt', budget: 920, icon: '💳' },
-            { category: 'Children', budget: 900, icon: '👶' },
-            { category: 'Utilities', budget: 522, icon: '💡' },
-            { category: 'Education', budget: 300, icon: '📚' },
-            { category: 'Pets', budget: 50, icon: '🐕' },
-            { category: 'Health/Medical', budget: 30, icon: '💊' },
-            { category: 'Entertainment', budget: 200, icon: '🎬' },
-            { category: 'Gifts', budget: 100, icon: '🎁' },
-            { category: 'Travel', budget: 200, icon: '✈️' },
-            { category: 'Technology', budget: 100, icon: '📱' },
+            { category: 'Groceries', budget: 600, icon: '🛒' },
+            { category: 'Dining', budget: 300, icon: '🍔' },
+            { category: 'Transportation', budget: 400, icon: '⛽' },
+            { category: 'Entertainment', budget: 150, icon: '🎬' },
+            { category: 'Health & Fitness', budget: 200, icon: '💪' },
+            { category: 'Shopping', budget: 150, icon: '🛍️' },
+            { category: 'Subscriptions', budget: 250, icon: '📱' },
+            { category: 'Kids', budget: 150, icon: '👶' },
+            { category: 'Personal', budget: 100, icon: '👤' },
             { category: 'Other', budget: 200, icon: '📦' }
+        ];
+
+        const DEFAULT_DEBTS = [
+            { name: 'Upstart Loan', balance: 15000, rate: 18.5, payment: 830, type: 'loan', priority: 1 },
+            { name: 'Monterey Financial (Tax)', balance: 8000, rate: 15, payment: 560, type: 'loan', priority: 2 },
+            { name: 'Fifth Third Bank', balance: 8000, rate: 12, payment: 640, type: 'loan', priority: 3 },
+            { name: 'GM Financial (Car)', balance: 12000, rate: 6.5, payment: 426, type: 'auto', priority: 8 },
+            { name: 'Apple Card', balance: 5000, rate: 24, payment: 200, type: 'credit', priority: 4 },
+            { name: 'Amex', balance: 3000, rate: 22, payment: 200, type: 'credit', priority: 5 },
+            { name: 'Citi Card', balance: 3000, rate: 20, payment: 284, type: 'credit', priority: 6 },
+            { name: 'Capital One', balance: 1000, rate: 26, payment: 68, type: 'credit', priority: 7 },
+            { name: 'Chase Credit Card', balance: 1000, rate: 21, payment: 50, type: 'credit', priority: 9 }
         ];
 
         let data = {
             transactions: [],
             budgets: DEFAULT_BUDGETS,
+            debts: DEFAULT_DEBTS,
             events: [],
             todos: [],
-            shopping: [],
-            reminders: []
+            shopping: []
         };
 
         let calendarDate = new Date();
         let selectedDate = new Date().toISOString().split('T')[0];
 
         function loadData() {
-            const saved = localStorage.getItem('dodge_family_data');
+            const saved = localStorage.getItem('dodge_family_data_v2');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 data = { ...data, ...parsed };
             }
-            // Set default dates
+            // Migrate old data
+            const oldSaved = localStorage.getItem('dodge_family_data');
+            if (oldSaved && !saved) {
+                const parsed = JSON.parse(oldSaved);
+                data = { ...data, ...parsed, debts: DEFAULT_DEBTS };
+                saveData();
+            }
             document.getElementById('txDate').value = today();
             document.getElementById('eventDate').value = today();
         }
 
         function saveData() {
-            localStorage.setItem('dodge_family_data', JSON.stringify(data));
+            localStorage.setItem('dodge_family_data_v2', JSON.stringify(data));
         }
 
         function today() { return new Date().toISOString().split('T')[0]; }
@@ -687,6 +781,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
             document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
             if (page === 'calendar') renderCalendar();
+            if (page === 'debt') renderDebt();
         }
 
         // ========== MODALS ==========
@@ -696,6 +791,7 @@
         // ========== RENDER ALL ==========
         function renderAll() {
             renderHome();
+            renderDebt();
             renderBudget();
             renderCalendar();
             renderTodos();
@@ -705,45 +801,221 @@
 
         // ========== HOME ==========
         function renderHome() {
-            // Budget summary
             const monthTx = data.transactions.filter(t => t.date?.startsWith(getCurrentMonth()) && t.type !== 'income');
             const totalBudget = data.budgets.reduce((s, b) => s + b.budget, 0);
             const spent = monthTx.reduce((s, t) => s + t.amount, 0);
-            document.getElementById('homeBudgetLeft').textContent = '$' + (totalBudget - spent).toLocaleString();
+            document.getElementById('homeBudgetLeft').textContent = '$' + Math.round(totalBudget - spent).toLocaleString();
 
-            // Todos count
+            const totalDebt = data.debts.reduce((s, d) => s + (d.paid ? 0 : d.balance), 0);
+            document.getElementById('homeDebtTotal').textContent = '$' + Math.round(totalDebt / 1000) + 'K';
+            document.getElementById('homeDebtTotal').style.color = totalDebt > 0 ? 'var(--danger)' : 'var(--success)';
+
             const activeTodos = data.todos.filter(t => !t.done).length;
             document.getElementById('homeTodosCount').textContent = activeTodos;
 
-            // This week events
-            const weekEnd = new Date(); weekEnd.setDate(weekEnd.getDate() + 7);
-            const weekEvents = data.events.filter(e => {
-                const d = new Date(e.date);
-                return d >= new Date(today()) && d <= weekEnd;
-            }).length;
-            document.getElementById('homeEventsCount').textContent = weekEvents;
-
-            // Today's tasks
             const todayTodos = data.todos.filter(t => !t.done).slice(0, 5);
             document.getElementById('homeTodos').innerHTML = todayTodos.length ? 
                 todayTodos.map(t => `<div class="list-item"><span>${t.text}</span></div>`).join('') :
                 '<p style="color:var(--text-secondary);padding:12px;">No tasks</p>';
 
-            // Upcoming events
             const upcoming = data.events.filter(e => e.date >= today()).sort((a,b) => a.date.localeCompare(b.date)).slice(0, 3);
             document.getElementById('homeEvents').innerHTML = upcoming.length ?
                 upcoming.map(e => `<div class="event-item"><span class="event-time">${formatDateShort(e.date)}</span><span class="event-title">${e.title}</span></div>`).join('') :
                 '<p style="color:var(--text-secondary);padding:12px;">No upcoming events</p>';
-
-            // Reminders
-            document.getElementById('homeReminders').innerHTML = data.reminders.length ?
-                data.reminders.slice(0, 3).map(r => `<div class="reminder-item"><span>${r.text}</span><span class="reminder-date">${r.date}</span></div>`).join('') :
-                '<p style="color:var(--text-secondary);padding:12px;">No reminders</p>';
         }
 
         function formatDateShort(dateStr) {
             const d = new Date(dateStr + 'T00:00:00');
             return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // ========== DEBT ==========
+        function renderDebt() {
+            const activeDebts = data.debts.filter(d => !d.paid);
+            const totalDebt = activeDebts.reduce((s, d) => s + d.balance, 0);
+            const monthlyPayments = activeDebts.reduce((s, d) => s + d.payment, 0);
+
+            document.getElementById('totalDebt').textContent = '$' + totalDebt.toLocaleString();
+            document.getElementById('monthlyPayments').textContent = '$' + monthlyPayments.toLocaleString();
+
+            // Estimate debt-free date (simplified)
+            const monthsToPayoff = totalDebt > 0 ? Math.ceil(totalDebt / monthlyPayments) : 0;
+            const debtFreeDate = new Date();
+            debtFreeDate.setMonth(debtFreeDate.getMonth() + monthsToPayoff);
+            document.getElementById('debtFreeDate').textContent = monthsToPayoff > 0 ? 
+                debtFreeDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }) : '🎉';
+
+            // Sort by interest rate (highest first for avalanche)
+            const sorted = [...data.debts].sort((a, b) => b.rate - a.rate);
+
+            document.getElementById('debtList').innerHTML = sorted.map((d, i) => `
+                <div class="debt-item ${d.paid ? 'paid' : ''}">
+                    <div class="debt-header">
+                        <div>
+                            <div class="debt-name">${d.paid ? '✅ ' : ''}${d.name}</div>
+                            <div class="debt-details">
+                                <span>${d.rate}% APR</span>
+                                <span>$${d.payment}/mo</span>
+                                <span>${d.type}</span>
+                            </div>
+                        </div>
+                        <div class="debt-balance" style="color:${d.paid ? 'var(--success)' : 'var(--danger)'}">
+                            ${d.paid ? 'PAID' : '$' + d.balance.toLocaleString()}
+                        </div>
+                    </div>
+                    ${!d.paid ? `
+                    <div class="debt-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="editDebt(${i})">Edit</button>
+                        <button class="btn btn-sm btn-primary" onclick="markDebtPaid(${i})">Mark Paid</button>
+                    </div>
+                    ` : `
+                    <div class="debt-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="unmarkDebtPaid(${i})">Undo</button>
+                    </div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function addDebt() {
+            const name = document.getElementById('debtName').value.trim();
+            const balance = parseFloat(document.getElementById('debtBalance').value);
+            const rate = parseFloat(document.getElementById('debtRate').value);
+            const payment = parseFloat(document.getElementById('debtPayment').value);
+            const type = document.getElementById('debtType').value;
+
+            if (!name || !balance) { alert('Please fill name and balance'); return; }
+
+            data.debts.push({ name, balance, rate: rate || 0, payment: payment || 0, type, paid: false });
+            saveData();
+            renderAll();
+            hideModal('addDebt');
+            document.getElementById('debtName').value = '';
+            document.getElementById('debtBalance').value = '';
+            document.getElementById('debtRate').value = '';
+            document.getElementById('debtPayment').value = '';
+        }
+
+        function markDebtPaid(idx) {
+            const sorted = [...data.debts].sort((a, b) => b.rate - a.rate);
+            const debt = sorted[idx];
+            const realIdx = data.debts.indexOf(debt);
+            data.debts[realIdx].paid = true;
+            data.debts[realIdx].balance = 0;
+            saveData();
+            renderAll();
+        }
+
+        function unmarkDebtPaid(idx) {
+            const sorted = [...data.debts].sort((a, b) => b.rate - a.rate);
+            const debt = sorted[idx];
+            const realIdx = data.debts.indexOf(debt);
+            data.debts[realIdx].paid = false;
+            saveData();
+            renderAll();
+        }
+
+        function editDebt(idx) {
+            const sorted = [...data.debts].sort((a, b) => b.rate - a.rate);
+            const debt = sorted[idx];
+            const newBalance = prompt('New balance for ' + debt.name + ':', debt.balance);
+            if (newBalance !== null) {
+                const realIdx = data.debts.indexOf(debt);
+                data.debts[realIdx].balance = parseFloat(newBalance) || 0;
+                saveData();
+                renderAll();
+            }
+        }
+
+        // ========== BONUS CALCULATOR ==========
+        function calculateBonus() {
+            const grossBonus = parseFloat(document.getElementById('bonusAmount').value) || 0;
+            const taxRate = 0.30; // Estimate 30% taxes on bonus
+            const netBonus = grossBonus * (1 - taxRate);
+
+            // Get active debts sorted by interest rate (avalanche method)
+            const activeDebts = data.debts.filter(d => !d.paid).sort((a, b) => b.rate - a.rate);
+            const totalDebt = activeDebts.reduce((s, d) => s + d.balance, 0);
+
+            let remaining = netBonus;
+            const allocations = [];
+            let freedPayments = 0;
+
+            // Pay off debts in order of highest interest
+            for (const debt of activeDebts) {
+                if (remaining <= 0) break;
+                const payAmount = Math.min(remaining, debt.balance);
+                if (payAmount > 0) {
+                    allocations.push({
+                        name: debt.name,
+                        balance: debt.balance,
+                        pay: payAmount,
+                        fullPayoff: payAmount >= debt.balance,
+                        monthlyPayment: debt.payment
+                    });
+                    if (payAmount >= debt.balance) {
+                        freedPayments += debt.payment;
+                    }
+                    remaining -= payAmount;
+                }
+            }
+
+            // Recommend emergency fund from remainder
+            const emergencyFund = Math.min(remaining, 9000);
+            remaining -= emergencyFund;
+
+            // Build results HTML
+            let html = `
+                <div class="bonus-result-row">
+                    <span>Gross Bonus</span>
+                    <span>$${grossBonus.toLocaleString()}</span>
+                </div>
+                <div class="bonus-result-row">
+                    <span>Est. Taxes (~30%)</span>
+                    <span style="color:#ff6b6b;">-$${Math.round(grossBonus * taxRate).toLocaleString()}</span>
+                </div>
+                <div class="bonus-result-row" style="font-weight:700;">
+                    <span>Net Bonus</span>
+                    <span>$${Math.round(netBonus).toLocaleString()}</span>
+                </div>
+                <hr style="border-color:rgba(255,255,255,0.2);margin:12px 0;">
+                <div style="font-weight:600;margin-bottom:8px;">💳 Debt Payoff:</div>
+            `;
+
+            let totalPaid = 0;
+            for (const alloc of allocations) {
+                totalPaid += alloc.pay;
+                html += `
+                    <div class="bonus-result-row">
+                        <span>${alloc.fullPayoff ? '✅' : '📉'} ${alloc.name}</span>
+                        <span>${alloc.fullPayoff ? 'PAID OFF' : '-$' + Math.round(alloc.pay).toLocaleString()}</span>
+                    </div>
+                `;
+            }
+
+            html += `
+                <hr style="border-color:rgba(255,255,255,0.2);margin:12px 0;">
+                <div class="bonus-result-row">
+                    <span>Total Debt Paid</span>
+                    <span style="color:#51cf66;">$${Math.round(totalPaid).toLocaleString()}</span>
+                </div>
+                <div class="bonus-result-row">
+                    <span>🏦 Emergency Fund</span>
+                    <span>$${emergencyFund.toLocaleString()}</span>
+                </div>
+                <div class="bonus-result-row">
+                    <span>💵 Remaining</span>
+                    <span>$${Math.round(remaining).toLocaleString()}</span>
+                </div>
+                <hr style="border-color:rgba(255,255,255,0.2);margin:12px 0;">
+                <div class="bonus-result-row" style="font-weight:700;font-size:1.1rem;">
+                    <span>Monthly Payments Freed</span>
+                    <span style="color:#51cf66;">+$${freedPayments.toLocaleString()}/mo</span>
+                </div>
+            `;
+
+            document.getElementById('bonusBreakdown').innerHTML = html;
+            document.getElementById('bonusResult').style.display = 'block';
         }
 
         // ========== BUDGET ==========
@@ -754,10 +1026,9 @@
             const spent = monthTx.reduce((s, t) => s + t.amount, 0);
 
             document.getElementById('budgetTotal').textContent = '$' + totalBudget.toLocaleString();
-            document.getElementById('budgetSpent').textContent = '$' + spent.toLocaleString();
-            document.getElementById('budgetLeft').textContent = '$' + (totalBudget - spent).toLocaleString();
+            document.getElementById('budgetSpent').textContent = '$' + Math.round(spent).toLocaleString();
+            document.getElementById('budgetLeft').textContent = '$' + Math.round(totalBudget - spent).toLocaleString();
 
-            // Categories
             document.getElementById('budgetCategories').innerHTML = data.budgets.map(b => {
                 const catSpent = monthTx.filter(t => t.category === b.category).reduce((s, t) => s + t.amount, 0);
                 const pct = b.budget > 0 ? Math.min((catSpent / b.budget) * 100, 100) : 0;
@@ -766,7 +1037,7 @@
                     <div class="budget-row" onclick="showCategoryDetail('${b.category}')">
                         <div class="name">${b.icon} ${b.category}</div>
                         <div class="amounts">
-                            <span class="spent">$${catSpent.toFixed(0)}</span>
+                            <span class="spent">$${Math.round(catSpent)}</span>
                             <span class="total">/ $${b.budget}</span>
                             <span class="arrow">›</span>
                         </div>
@@ -775,16 +1046,15 @@
                 `;
             }).join('');
 
-            // Recent transactions
-            const recent = [...data.transactions].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 10);
+            const recent = [...data.transactions].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 8);
             document.getElementById('recentTransactions').innerHTML = recent.length ?
                 recent.map(t => `
                     <div class="list-item">
                         <div class="content">
-                            <div>${t.description}</div>
+                            <div>${t.description?.substring(0, 30) || 'Unknown'}</div>
                             <div class="meta">${t.category} • ${t.date || 'No date'}</div>
                         </div>
-                        <div style="color:${t.type === 'income' ? 'var(--success)' : 'var(--text-primary)'}">${t.type === 'income' ? '+' : '-'}$${t.amount.toFixed(2)}</div>
+                        <div style="color:${t.type === 'income' ? 'var(--success)' : 'var(--text-primary)'}">$${t.amount?.toFixed(2) || '0.00'}</div>
                     </div>
                 `).join('') :
                 '<p class="empty-state"><span class="icon">💳</span><br>No transactions yet</p>';
@@ -804,7 +1074,7 @@
 
             if (!desc || !amount) { alert('Please fill description and amount'); return; }
 
-            data.transactions.push({ description: desc, amount, category, date, type: 'expense', who, addedBy: currentUser.name });
+            data.transactions.push({ description: desc, amount, category, date, type: 'expense', who });
             saveData();
             renderAll();
             hideModal('addTransaction');
@@ -812,7 +1082,6 @@
             document.getElementById('txAmount').value = '';
         }
 
-        // ========== CATEGORY DETAIL ==========
         let currentDetailCategory = null;
 
         function showCategoryDetail(category) {
@@ -821,34 +1090,23 @@
             const budget = data.budgets.find(b => b.category === category);
             if (!budget) return;
 
-            // Filter transactions for this category in current month
             const catTx = data.transactions.filter(t => 
-                t.category === category && 
-                t.date?.startsWith(month) && 
-                t.type !== 'income'
+                t.category === category && t.date?.startsWith(month) && t.type !== 'income'
             ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
             const spent = catTx.reduce((s, t) => s + t.amount, 0);
             const remaining = budget.budget - spent;
             const pct = budget.budget > 0 ? Math.min((spent / budget.budget) * 100, 100) : 0;
 
-            // Update modal header
             document.getElementById('catDetailIcon').textContent = budget.icon;
             document.getElementById('catDetailName').textContent = budget.category;
             document.getElementById('catDetailMonth').textContent = new Date(month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-
-            // Update stats
             document.getElementById('catDetailSpent').textContent = '$' + spent.toFixed(2);
             document.getElementById('catDetailSpent').style.color = spent > budget.budget ? 'var(--danger)' : 'var(--text-primary)';
             document.getElementById('catDetailRemaining').textContent = '$' + remaining.toFixed(2);
             document.getElementById('catDetailRemaining').style.color = remaining < 0 ? 'var(--danger)' : 'var(--accent)';
-
-            // Update progress bar
-            const progressEl = document.getElementById('catDetailProgress');
-            progressEl.style.width = pct + '%';
-            progressEl.className = 'progress-fill ' + (spent > budget.budget ? 'over' : pct > 80 ? 'warning' : '');
-
-            // Update transaction list
+            document.getElementById('catDetailProgress').style.width = pct + '%';
+            document.getElementById('catDetailProgress').className = 'progress-fill ' + (spent > budget.budget ? 'over' : pct > 80 ? 'warning' : '');
             document.getElementById('catDetailCount').textContent = catTx.length + ' item' + (catTx.length !== 1 ? 's' : '');
             document.getElementById('catDetailList').innerHTML = catTx.length ?
                 catTx.map((t, i) => {
@@ -856,10 +1114,10 @@
                     return `
                         <div class="tx-item">
                             <div class="info">
-                                <div class="desc">${t.description}</div>
+                                <div class="desc">${t.description?.substring(0, 25) || 'Unknown'}</div>
                                 <div class="date">${formatDateShort(t.date)} ${t.who ? '• ' + t.who : ''}</div>
                             </div>
-                            <div class="amount">$${t.amount.toFixed(2)}</div>
+                            <div class="amount">$${t.amount?.toFixed(2) || '0.00'}</div>
                             <span class="delete-tx" onclick="deleteCategoryTx(${txIndex})">×</span>
                         </div>
                     `;
@@ -874,10 +1132,7 @@
             data.transactions.splice(txIndex, 1);
             saveData();
             renderAll();
-            // Refresh the modal
-            if (currentDetailCategory) {
-                showCategoryDetail(currentDetailCategory);
-            }
+            if (currentDetailCategory) showCategoryDetail(currentDetailCategory);
         }
 
         // ========== CALENDAR ==========
@@ -892,13 +1147,11 @@
 
             let html = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<div class="calendar-day header">${d}</div>`).join('');
 
-            // Previous month days
             const prevDays = new Date(year, month, 0).getDate();
             for (let i = firstDay - 1; i >= 0; i--) {
                 html += `<div class="calendar-day other-month">${prevDays - i}</div>`;
             }
 
-            // Current month
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 const isToday = dateStr === todayStr;
@@ -907,7 +1160,6 @@
                 html += `<div class="calendar-day ${isToday ? 'today' : ''}" onclick="selectDate('${dateStr}')" style="${isSelected ? 'background:var(--accent);color:var(--bg-primary);' : ''}">${d}${hasEvent ? '<span class="event-dot"></span>' : ''}</div>`;
             }
 
-            // Next month days
             const totalCells = firstDay + daysInMonth;
             const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
             for (let i = 1; i <= remaining; i++) {
@@ -918,11 +1170,7 @@
             renderDayEvents();
         }
 
-        function selectDate(dateStr) {
-            selectedDate = dateStr;
-            renderCalendar();
-        }
-
+        function selectDate(dateStr) { selectedDate = dateStr; renderCalendar(); }
         function prevMonth() { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); }
         function nextMonth() { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); }
 
@@ -944,17 +1192,13 @@
             const title = document.getElementById('eventTitle').value.trim();
             const date = document.getElementById('eventDate').value;
             const time = document.getElementById('eventTime').value;
-            const notes = document.getElementById('eventNotes').value;
-
             if (!title || !date) { alert('Please fill title and date'); return; }
-
-            data.events.push({ title, date, time, notes, addedBy: currentUser.name });
+            data.events.push({ title, date, time });
             saveData();
             selectedDate = date;
             renderAll();
             hideModal('addEvent');
             document.getElementById('eventTitle').value = '';
-            document.getElementById('eventNotes').value = '';
         }
 
         function deleteEvent(idx) {
@@ -981,7 +1225,7 @@
                 '<p class="empty-state"><span class="icon">✅</span><br>All done!</p>';
 
             document.getElementById('completedTodos').innerHTML = completed.length ?
-                completed.map((t, i) => `
+                completed.map(t => `
                     <div class="list-item">
                         <div class="checkbox checked" onclick="toggleTodo(${data.todos.indexOf(t)})"></div>
                         <div class="content done">${t.text}</div>
@@ -994,29 +1238,15 @@
             const input = document.getElementById('quickTodo');
             const text = input.value.trim();
             if (!text) return;
-            data.todos.push({ text, done: false, addedBy: currentUser.name, addedAt: new Date().toISOString() });
+            data.todos.push({ text, done: false });
             saveData();
             renderAll();
             input.value = '';
         }
 
-        function toggleTodo(idx) {
-            data.todos[idx].done = !data.todos[idx].done;
-            saveData();
-            renderAll();
-        }
-
-        function deleteTodo(idx) {
-            data.todos.splice(idx, 1);
-            saveData();
-            renderAll();
-        }
-
-        function clearCompletedTodos() {
-            data.todos = data.todos.filter(t => !t.done);
-            saveData();
-            renderAll();
-        }
+        function toggleTodo(idx) { data.todos[idx].done = !data.todos[idx].done; saveData(); renderAll(); }
+        function deleteTodo(idx) { data.todos.splice(idx, 1); saveData(); renderAll(); }
+        function clearCompletedTodos() { data.todos = data.todos.filter(t => !t.done); saveData(); renderAll(); }
 
         // ========== SHOPPING ==========
         function renderShopping() {
@@ -1041,118 +1271,9 @@
             input.value = '';
         }
 
-        function toggleShop(idx) {
-            data.shopping[idx].checked = !data.shopping[idx].checked;
-            saveData();
-            renderShopping();
-        }
-
-        function deleteShop(idx) {
-            data.shopping.splice(idx, 1);
-            saveData();
-            renderShopping();
-        }
-
-        function clearCheckedShop() {
-            data.shopping = data.shopping.filter(s => !s.checked);
-            saveData();
-            renderShopping();
-        }
-
-        // ========== CSV IMPORT ==========
-        const dropZone = document.getElementById('importDropZone');
-        const csvInput = document.getElementById('csvInput');
-        let pendingImport = [];
-
-        dropZone.addEventListener('click', () => csvInput.click());
-        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
-        dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--bg-tertiary)'; });
-        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--bg-tertiary)'; if (e.dataTransfer.files[0]) handleCSV(e.dataTransfer.files[0]); });
-        csvInput.addEventListener('change', e => { if (e.target.files[0]) handleCSV(e.target.files[0]); });
-
-        function handleCSV(file) {
-            const reader = new FileReader();
-            reader.onload = e => parseCSV(e.target.result);
-            reader.readAsText(file);
-        }
-
-        function parseCSV(text) {
-            const lines = text.trim().split('\n');
-            const headers = lines[0].toLowerCase();
-            const dateIdx = headers.includes('date') ? headers.split(',').findIndex(h => h.includes('date')) : 0;
-            const descIdx = headers.split(',').findIndex(h => h.includes('desc') || h.includes('name') || h.includes('merchant'));
-            const amountIdx = headers.split(',').findIndex(h => h.includes('amount'));
-            const catIdx = headers.split(',').findIndex(h => h.includes('category'));
-
-            pendingImport = [];
-            for (let i = 1; i < lines.length; i++) {
-                const cols = parseCSVLine(lines[i]);
-                const amount = Math.abs(parseFloat((cols[amountIdx] || '0').replace(/[$,]/g, '')));
-                if (!amount) continue;
-                const rawAmt = parseFloat((cols[amountIdx] || '0').replace(/[$,]/g, ''));
-                pendingImport.push({
-                    date: formatCSVDate(cols[dateIdx]),
-                    description: (cols[descIdx] || 'Unknown').replace(/"/g, '').substring(0, 50),
-                    amount,
-                    category: mapCategory(cols[catIdx] || ''),
-                    type: rawAmt < 0 ? 'expense' : 'income',
-                    who: 'Shared',
-                    imported: true
-                });
-            }
-            document.getElementById('importCount').textContent = pendingImport.length;
-            document.getElementById('importList').innerHTML = pendingImport.slice(0, 10).map(t => `<div style="padding:6px 0;border-bottom:1px solid var(--bg-tertiary);">${t.description} - $${t.amount.toFixed(2)}</div>`).join('');
-            document.getElementById('importPreview').style.display = 'block';
-        }
-
-        function parseCSVLine(line) {
-            const result = []; let current = ''; let inQuotes = false;
-            for (let c of line) {
-                if (c === '"') inQuotes = !inQuotes;
-                else if (c === ',' && !inQuotes) { result.push(current); current = ''; }
-                else current += c;
-            }
-            result.push(current);
-            return result;
-        }
-
-        function formatCSVDate(str) {
-            if (!str) return today();
-            const d = new Date(str.replace(/"/g, ''));
-            return isNaN(d) ? today() : d.toISOString().split('T')[0];
-        }
-
-        function mapCategory(cat) {
-            const c = (cat || '').toLowerCase();
-            if (c.includes('grocer') || c.includes('food') || c.includes('dining') || c.includes('restaurant')) return 'Everyday';
-            if (c.includes('gas') || c.includes('fuel') || c.includes('auto') || c.includes('car') || c.includes('parking')) return 'Transportation';
-            if (c.includes('util') || c.includes('electric') || c.includes('water') || c.includes('internet') || c.includes('phone')) return 'Utilities';
-            if (c.includes('insur')) return 'Insurance';
-            if (c.includes('debt') || c.includes('loan') || c.includes('credit') || c.includes('payment')) return 'Debt';
-            if (c.includes('kid') || c.includes('child') || c.includes('school') || c.includes('daycare')) return 'Children';
-            if (c.includes('edu') || c.includes('tuition') || c.includes('book')) return 'Education';
-            if (c.includes('pet') || c.includes('vet') || c.includes('dog') || c.includes('cat')) return 'Pets';
-            if (c.includes('health') || c.includes('medical') || c.includes('doctor') || c.includes('pharmacy')) return 'Health/Medical';
-            if (c.includes('entertain') || c.includes('movie') || c.includes('stream')) return 'Entertainment';
-            if (c.includes('gift')) return 'Gifts';
-            if (c.includes('travel') || c.includes('hotel') || c.includes('flight') || c.includes('vacation')) return 'Travel';
-            if (c.includes('tech') || c.includes('subscri') || c.includes('software')) return 'Technology';
-            if (c.includes('home') || c.includes('rent') || c.includes('mortgage') || c.includes('repair')) return 'Home';
-            return 'Other';
-        }
-
-        function confirmImport() {
-            const existing = new Set(data.transactions.map(t => `${t.date}-${t.description}-${t.amount}`));
-            const newTx = pendingImport.filter(t => !existing.has(`${t.date}-${t.description}-${t.amount}`));
-            data.transactions.push(...newTx);
-            saveData();
-            renderAll();
-            alert(`Imported ${newTx.length} transactions`);
-            hideModal('importCSV');
-            document.getElementById('importPreview').style.display = 'none';
-            csvInput.value = '';
-            pendingImport = [];
-        }
+        function toggleShop(idx) { data.shopping[idx].checked = !data.shopping[idx].checked; saveData(); renderShopping(); }
+        function deleteShop(idx) { data.shopping.splice(idx, 1); saveData(); renderShopping(); }
+        function clearCheckedShop() { data.shopping = data.shopping.filter(s => !s.checked); saveData(); renderShopping(); }
 
         // ========== CHASE JSON IMPORT ==========
         async function loadChaseJSON() {
@@ -1161,23 +1282,18 @@
                 if (!resp.ok) throw new Error('Failed to fetch');
                 const transactions = await resp.json();
                 
-                // Check for duplicates
                 const existing = new Set(data.transactions.map(t => `${t.date}-${t.description}-${t.amount}`));
                 const newTx = transactions.filter(t => !existing.has(`${t.date}-${t.description}-${t.amount}`));
                 
-                if (newTx.length === 0) {
-                    alert('All transactions already imported!');
-                    return;
-                }
-                
-                if (!confirm(`Import ${newTx.length} Chase transactions?`)) return;
+                if (newTx.length === 0) { alert('All transactions already imported!'); return; }
+                if (!confirm(`Import ${newTx.length} transactions?`)) return;
                 
                 data.transactions.push(...newTx);
                 saveData();
                 renderAll();
                 alert(`Imported ${newTx.length} transactions!`);
             } catch (e) {
-                alert('Error loading Chase data: ' + e.message);
+                alert('Error: ' + e.message);
             }
         }
 
