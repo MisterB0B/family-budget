@@ -945,15 +945,6 @@
     "source": "Apple Card"
   },
   {
-    "date": "2026-01-07",
-    "description": "ACH DEPOSIT INTERNET TRANSFER FROM ACCOU",
-    "amount": 684.32,
-    "category": "Other",
-    "type": "expense",
-    "who": "Bob",
-    "source": "Apple Card"
-  },
-  {
     "date": "2026-01-06",
     "description": "FUZZYS 38707 407 W ELDORADO PKW #380 LIT",
     "amount": 14.37,
