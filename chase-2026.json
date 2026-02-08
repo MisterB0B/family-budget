@@ -1,18 +1,9 @@
 [
   {
-    "date": "2026-02-09",
-    "description": "POS DEBIT APPLE.COM/BILL",
-    "amount": 9.99,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
     "date": "2026-02-07",
     "description": "POS DEBIT SQ *WHISKEY CHARLIE'S ",
     "amount": 179.66,
-    "category": "Other",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -21,7 +12,7 @@
     "date": "2026-02-07",
     "description": "POS DEBIT TST* CASA DO BRASIL - C ",
     "amount": 103.29,
-    "category": "Other",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -48,34 +39,16 @@
     "date": "2026-02-06",
     "description": "UPSTART NETWORK RETURN FEE PPD ID",
     "amount": 15,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-02-06",
-    "description": "PURCHASE INTEREST CHARGE",
-    "amount": 247.42,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-06",
-    "description": "UBER   *EATS",
-    "amount": 59.71,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-02-05",
     "description": "AMZN Digital*BB4OH8AZ3",
     "amount": 2.8,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -84,7 +57,7 @@
     "date": "2026-02-05",
     "description": "AMZN Digital*6T4QQ3EN3",
     "amount": 1.4,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -99,91 +72,10 @@
     "source": "Chase Bank"
   },
   {
-    "date": "2026-02-05",
-    "description": "STONE CO CLIMBING",
-    "amount": 19.48,
-    "category": "Entertainment",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-05",
-    "description": "ANTHROPIC",
-    "amount": 34.15,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-05",
-    "description": "TJMAXX #0088",
-    "amount": 83.3,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-04",
-    "description": "SUNOCO 0998146500",
-    "amount": 3.31,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-04",
-    "description": "ACADEMY SPORTS #20",
-    "amount": 32.45,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-04",
-    "description": "RENDER.COM",
-    "amount": 6.48,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-04",
-    "description": "H-E-B #619",
-    "amount": 125.13,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-04",
-    "description": "PAYPAL *NETFLIX.COM 866-716-0414 CA 02/03",
-    "amount": 26.94,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-02-03",
-    "description": "ANTHROPIC",
-    "amount": 106.6,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-02-02",
     "description": "STONE CO CLIMBING STONECOCLIMBI TX 02/01",
     "amount": 134.23,
-    "category": "Other",
+    "category": "Health & Fitness",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -192,7 +84,7 @@
     "date": "2026-02-02",
     "description": "INSPIRE ROCK SPRING 2812887625 TX 01/29",
     "amount": 34.65,
-    "category": "Other",
+    "category": "Health & Fitness",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -201,52 +93,16 @@
     "date": "2026-02-02",
     "description": "INSPIRE ROCK SPRING 2812887625 TX 01/29",
     "amount": 30.32,
-    "category": "Other",
+    "category": "Health & Fitness",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-02-02",
-    "description": "CLAUDE.AI SUBSCRIPTION",
-    "amount": 213.2,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-02",
-    "description": "Suzanne sSchoolofDance",
-    "amount": 76.06,
-    "category": "Kids",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-02",
-    "description": "CAMINOS MEXICAN CAFE",
-    "amount": 62.04,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-02-02",
-    "description": "PURCHASE INTEREST CHARGE",
-    "amount": 23.16,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC2"
-  },
-  {
     "date": "2026-02-01",
     "description": "CRAIGSLIST.ORG",
     "amount": 15,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -255,43 +111,16 @@
     "date": "2026-01-31",
     "description": "AMAZON MKTPL*JG7XI1G83",
     "amount": 19.47,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
   },
   {
-    "date": "2026-01-31",
-    "description": "GRINGO'S COLLEGE STATION",
-    "amount": 120.71,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-31",
-    "description": "SQ *WHISKEY CHARLIE'S LIQ",
-    "amount": 36.79,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-31",
-    "description": "H-E-B #619",
-    "amount": 26.55,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-30",
     "description": "GOOGLE *Chrome",
     "amount": 5,
-    "category": "Entertainment",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -300,7 +129,7 @@
     "date": "2026-01-30",
     "description": "MCDONALD'S F21658",
     "amount": 6.48,
-    "category": "Everyday",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -309,7 +138,7 @@
     "date": "2026-01-30",
     "description": "GITHUB  INC.",
     "amount": 51.17,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -318,7 +147,7 @@
     "date": "2026-01-30",
     "description": "Prime Video *1814V5LE3",
     "amount": 6.48,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -327,7 +156,7 @@
     "date": "2026-01-30",
     "description": "UPSTART NETWORK RETRY PYMT 28171652 WEB ID",
     "amount": 830.4,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -354,64 +183,10 @@
     "date": "2026-01-30",
     "description": "I-45 DINER SPRING TX 01/29",
     "amount": 34.97,
-    "category": "Other",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "MONTHLY SERVICE FEE",
-    "amount": 15,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "JERSEY MIKES 15113",
-    "amount": 37.19,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "CIRCLE K #2741906",
-    "amount": 9.49,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "TIKTOK SHOP",
-    "amount": 37.62,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "AMAZON MKTPL*6D7JB6EM3",
-    "amount": 39.49,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-30",
-    "description": "APPLE.COM/BILL 866-712-7753 CA 01/29",
-    "amount": 14.06,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
   },
   {
     "date": "2026-01-29",
@@ -423,46 +198,10 @@
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-29",
-    "description": "WELLBORN SPECIAL UTILITY",
-    "amount": 90.15,
-    "category": "Utilities",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-29",
-    "description": "COLLEGESTATIONUTILITY",
-    "amount": 108.74,
-    "category": "Utilities",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-29",
-    "description": "MUNICIPAL ONLINE PAYMENTS",
-    "amount": 1.25,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-29",
-    "description": "WWW.PHOTOTEXASPHOTOGRA",
-    "amount": 38.97,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-28",
     "description": "Amazon.com*917YQ23O3",
     "amount": 90.61,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -471,7 +210,7 @@
     "date": "2026-01-28",
     "description": "AMAZON MKTPL*SF5LW3LV3",
     "amount": 54.11,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -480,43 +219,25 @@
     "date": "2026-01-28",
     "description": "HLU*HULUPLUS hulu.com/bill CA 01/28",
     "amount": 108.24,
-    "category": "Entertainment",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
     "date": "2026-01-28",
-    "description": "BCS FOOD MARKET",
-    "amount": 45.89,
-    "category": "Everyday",
+    "description": "INTEREST CHARGE:PURCHASES (Card 6257)",
+    "amount": 97.83,
+    "category": "Debt",
     "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-28",
-    "description": "THE FARM PATCH",
-    "amount": 38.96,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-28",
-    "description": "SUNOCO 09981465 COLLEGE STA TX 01/28",
-    "amount": 7.88,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
+    "who": "Shared",
+    "source": "CC 6257"
   },
   {
     "date": "2026-01-27",
     "description": "AMAZON MKTPL*222HD8FX3",
     "amount": 40.04,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -525,25 +246,16 @@
     "date": "2026-01-27",
     "description": "MONTHLY SERVICE FEE",
     "amount": 5,
-    "category": "Other",
+    "category": "Fees",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-27",
-    "description": "MONTHLY SERVICE FEE",
-    "amount": 15,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
     "date": "2026-01-26",
     "description": "AMAZON MKTPL*KZ1780563",
     "amount": 6.48,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -552,7 +264,7 @@
     "date": "2026-01-26",
     "description": "AMAZON MKTPL*KX57K3YL3",
     "amount": 27,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -579,7 +291,7 @@
     "date": "2026-01-26",
     "description": "PAYPAL INST XFER NINJATECHAI WEB ID",
     "amount": 6.55,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -597,37 +309,28 @@
     "date": "2026-01-26",
     "description": "MONTEREY FIN SVC MFS PAYMNT PPD ID",
     "amount": 559.6,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-26",
-    "description": "COSTCO WHSE#1614",
-    "amount": 434.92,
-    "category": "Other",
+    "date": "2026-01-25",
+    "description": "GOLDS GYM TOWER POINT",
+    "amount": 43.29,
+    "category": "Health & Fitness",
     "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
+    "who": "Shared",
+    "source": "CC 6257"
   },
   {
-    "date": "2026-01-26",
-    "description": "COSTCO WHSE#1614",
-    "amount": 21.61,
-    "category": "Other",
+    "date": "2026-01-24",
+    "description": "OnStar, LLC",
+    "amount": 21.31,
+    "category": "Transportation",
     "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-26",
-    "description": "H-E-B #746",
-    "amount": 103.76,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
+    "who": "Shared",
+    "source": "CC 6257"
   },
   {
     "date": "2026-01-23",
@@ -648,136 +351,19 @@
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-23",
-    "description": "H-E-B #619",
-    "amount": 175.89,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-23",
-    "description": "PAYPAL *PARAMNTPLUS",
-    "amount": 12.99,
-    "category": "Utilities",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC2"
-  },
-  {
-    "date": "2026-01-23",
-    "description": "CAPITAL ONE MOBILE PMT CA0367C77941A6D WEB ID",
-    "amount": 116.02,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "PURCHASE INTEREST CHARGE",
-    "amount": 402.69,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase CC"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "OVERDRAFT FEE FOR A $16.99 RECURRING CARD PURCHASE",
-    "amount": 34,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "SQ *RB HAIR STUDIO",
-    "amount": 215,
-    "category": "Personal",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "AMAZON MKTPL*YR2V17233",
-    "amount": 19.47,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "APPLE.COM/US",
-    "amount": 107.17,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-22",
-    "description": "PAYPAL *BILLIE INC",
-    "amount": 10.83,
-    "category": "Personal",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC2"
-  },
-  {
     "date": "2026-01-21",
     "description": "PAYPAL INST XFER QUICKBOOKS WEB ID",
     "amount": 40.51,
-    "category": "Other",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-21",
-    "description": "ATMOS ENERGY",
-    "amount": 169.15,
-    "category": "Utilities",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase CC"
-  },
-  {
-    "date": "2026-01-21",
-    "description": "OVERDRAFT FEE FOR A $92.00 ITEM - DETAILS: ORIG CO",
-    "amount": 34,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-21",
-    "description": "ZOOM.COM 888-799-9666 ZOOM.US CA 01/20",
-    "amount": 16.99,
     "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-21",
-    "description": "SHIPLEY DO-NUTS - FC60 979-2292869 TX 01/20",
-    "amount": 29.47,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
   },
   {
     "date": "2026-01-20",
     "description": "Audible*JH0Y76RT3",
     "amount": 16.18,
-    "category": "Utilities",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -786,7 +372,7 @@
     "date": "2026-01-20",
     "description": "AMAZON MKTPL*2O5DD3MX3",
     "amount": 1.33,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -795,7 +381,7 @@
     "date": "2026-01-20",
     "description": "PAYPAL INST XFER HBOMAX HELP.HBO WEB ID",
     "amount": 11.73,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -810,51 +396,6 @@
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-20",
-    "description": "ORIG CO NAME:CHASE CREDIT CRD ORIG ID:476003",
-    "amount": 627,
-    "category": "Other",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-20",
-    "description": "ORIG CO NAME:HOME DEPOT ORIG ID:CITIAU",
-    "amount": 92,
-    "category": "Home",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-20",
-    "description": "H-E-B #746",
-    "amount": 251.24,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-20",
-    "description": "USPS PO 48956508 14881 WELLBORN TX 353463 01/20",
-    "amount": 30.05,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-20",
-    "description": "PAYPAL *DISNEY PLUS 888-905-7888 CA 01/18",
-    "amount": 20.56,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
     "date": "2026-01-19",
     "description": "PURCHASE INTEREST CHARGE",
     "amount": 49.8,
@@ -864,136 +405,10 @@
     "source": "Chase CC"
   },
   {
-    "date": "2026-01-19",
-    "description": "H-E-B #619",
-    "amount": 185.32,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-19",
-    "description": "SPO*BLACKWATERDRAWBREWING",
-    "amount": 72.18,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-18",
-    "description": "EXXON RATTLERS COUNTRY",
-    "amount": 51.43,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-18",
-    "description": "COSTCO WHSE#1614",
-    "amount": 215.77,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-18",
-    "description": "COSTCO WHSE#1614",
-    "amount": 46.32,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "JUANITAS",
-    "amount": 145.41,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "IWON KOREAN BBQ",
-    "amount": 220.72,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "THE ANGRY ELEPHANT CS",
-    "amount": 45.87,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "H-E-B #619",
-    "amount": 54.58,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "H-E-B GAS/CAR WASH#619",
-    "amount": 45.7,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "CINEMARK 182 RSTBAR",
-    "amount": 31.46,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "SPIRIT ICE ARENA",
-    "amount": 9,
-    "category": "Entertainment",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "LS Reds Ice House",
-    "amount": 52.22,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-17",
-    "description": "CINEMARK 182 BOXCON",
-    "amount": 16.25,
-    "category": "Entertainment",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-16",
     "description": "AMERICAN EXPRESS ACH PMT M8358 WEB ID",
     "amount": 400,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1011,25 +426,16 @@
     "date": "2026-01-16",
     "description": "FIFTH THIRD BANK WEB PAY 949701142026 WEB ID",
     "amount": 640.42,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-16",
-    "description": "EXXON TOUCHDOWN 102",
-    "amount": 15.13,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-15",
     "description": "AMAZON MKTPL*EL37Z84O3",
     "amount": 10.81,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -1038,15 +444,6 @@
     "date": "2026-01-15",
     "description": "PAYPAL INST XFER GOOGLE YOUTUBE WEB ID",
     "amount": 22.99,
-    "category": "Entertainment",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-15",
-    "description": "OVERDRAFT FEE FOR A $11.99 ITEM - DETAILS: ORIG CO",
-    "amount": 34,
     "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
@@ -1056,7 +453,7 @@
     "date": "2026-01-14",
     "description": "PAYPAL INST XFER LIVEPLAN WEB ID",
     "amount": 2.99,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1074,61 +471,16 @@
     "date": "2026-01-14",
     "description": "TACO BELL 034591 ITALY TX 01/13",
     "amount": 16.2,
-    "category": "Other",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-14",
-    "description": "ORIG CO NAME:PAYPAL ORIG ID:PAYPAL",
-    "amount": 11.99,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-14",
-    "description": "RING STANDARD PLAN RING.COM CA 01/14",
-    "amount": 108.24,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-14",
-    "description": "ALDI 78078 BRYAN",
-    "amount": 34.42,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-14",
-    "description": "MONTHLY SERVICE FEE",
-    "amount": 15,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Savings"
-  },
-  {
-    "date": "2026-01-14",
-    "description": "STARBUCKS STORE 6532 COLLEGE STATI TX 01/13",
-    "amount": 8.19,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
   },
   {
     "date": "2026-01-13",
     "description": "QT 947 OUTSIDE ARLINGTON TX 082566 01/13",
     "amount": 52.03,
-    "category": "Other",
+    "category": "Transportation",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1137,7 +489,7 @@
     "date": "2026-01-13",
     "description": "A-PLAYERSTECH LT IAT PAYPAL 1047582527184 WEB ID",
     "amount": 39.99,
-    "category": "Other",
+    "category": "Entertainment",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1146,7 +498,7 @@
     "date": "2026-01-13",
     "description": "PAYPAL INST XFER NINJATECHAI WEB ID",
     "amount": 15,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1155,7 +507,7 @@
     "date": "2026-01-13",
     "description": "PAYPAL RETRY PYMT WEB ID",
     "amount": 206,
-    "category": "Other",
+    "category": "Entertainment",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1164,25 +516,16 @@
     "date": "2026-01-13",
     "description": "QT 947 ARLINGTON TX 01/12",
     "amount": 23.79,
-    "category": "Other",
+    "category": "Transportation",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
   },
   {
-    "date": "2026-01-13",
-    "description": "USPS KIOSK 4818859550",
-    "amount": 10.45,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-12",
     "description": "AMAZON MKTPL*1R1CS6KD3",
     "amount": 27.05,
-    "category": "Other",
+    "category": "Shopping",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -1191,7 +534,7 @@
     "date": "2026-01-12",
     "description": "Prime Video Channels",
     "amount": 6.48,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -1200,7 +543,7 @@
     "date": "2026-01-12",
     "description": "Amazon Digit*BJ1HP3U33",
     "amount": 11.9,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase CC"
@@ -1236,7 +579,7 @@
     "date": "2026-01-12",
     "description": "CAPITAL ONE CRCARDPMT CA0C18199BB4B4E WEB ID",
     "amount": 68,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1245,7 +588,7 @@
     "date": "2026-01-12",
     "description": "AMERICAN EXPRESS ACH PMT M3552 WEB ID",
     "amount": 300,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1254,7 +597,7 @@
     "date": "2026-01-12",
     "description": "BALLPARK BEVERAGE ARLINGTON TX 501417 01/11",
     "amount": 29.38,
-    "category": "Other",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1263,7 +606,7 @@
     "date": "2026-01-12",
     "description": "GM Financial GMF Pymt 111094086314 WEB ID",
     "amount": 426.17,
-    "category": "Other",
+    "category": "Transportation",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1272,7 +615,7 @@
     "date": "2026-01-12",
     "description": "TST* SPITZ RESTAURANT G FRISCO TX 01/10",
     "amount": 12.99,
-    "category": "Everyday",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1281,46 +624,10 @@
     "date": "2026-01-12",
     "description": "TST* SPITZ RESTAURANT G FRISCO TX 01/10",
     "amount": 24.65,
-    "category": "Everyday",
+    "category": "Dining",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-12",
-    "description": "NAIL SPA",
-    "amount": 57.5,
-    "category": "Personal",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-12",
-    "description": "SAMS CLUB.COM",
-    "amount": 88.51,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-12",
-    "description": "STARZ ENTERTAINMENT STARZ.COM CO 01/11",
-    "amount": 11.9,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-10",
-    "description": "H-E-B #746",
-    "amount": 147.74,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
   },
   {
     "date": "2026-01-09",
@@ -1344,46 +651,10 @@
     "date": "2026-01-09",
     "description": "UPSTART NETWORK RETURN FEE PPD ID",
     "amount": 15,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-09",
-    "description": "APPLE.COM/BILL 866-712-7753 CA 01/09",
-    "amount": 27.05,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-08",
-    "description": "H-E-B #746",
-    "amount": 11.96,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-08",
-    "description": "ULTA.COM",
-    "amount": 34.07,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-08",
-    "description": "APPLE.COM/BILL 866-712-7753 CA 01/08",
-    "amount": 9.99,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
   },
   {
     "date": "2026-01-07",
@@ -1396,165 +667,21 @@
   },
   {
     "date": "2026-01-07",
-    "description": "THE FARM PATCH",
-    "amount": 46.99,
-    "category": "Everyday",
+    "description": "FRONTIER COMM CORP WEB",
+    "amount": 221.9,
+    "category": "Utilities",
     "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-07",
-    "description": "COSTCO WHSE#1614",
-    "amount": 310.2,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-07",
-    "description": "CHEVRON 0391207",
-    "amount": 57.8,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-07",
-    "description": "APPLE.COM/BILL 866-712-7753 CA 01/07",
-    "amount": 7.57,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-06",
-    "description": "TST*POLITE COFFEE",
-    "amount": 12.5,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-06",
-    "description": "REI #284 COLLEGE STN",
-    "amount": 25.14,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-06",
-    "description": "Suzanne sSchoolofDance",
-    "amount": 76.06,
-    "category": "Kids",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-06",
-    "description": "PAYPAL *HIYAHEALTHP 312-961-4540 FL 01/06",
-    "amount": 37.9,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
+    "who": "Shared",
+    "source": "CC 6257"
   },
   {
     "date": "2026-01-05",
     "description": "PADDLE.COM MARKE IAT PAYPAL 1047375491185 WEB ID",
     "amount": 25,
-    "category": "Other",
+    "category": "Subscriptions",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-05",
-    "description": "TRADER JOE S #407",
-    "amount": 344.1,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-05",
-    "description": "WALGREENS #15586",
-    "amount": 16.99,
-    "category": "Health",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-05",
-    "description": "CAPITAL ONE MOBILE PMT CA0D5845408E12A WEB ID",
-    "amount": 40,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-05",
-    "description": "PAYPAL *NETFLIX.COM 866-716-0414 CA 01/03",
-    "amount": 26.94,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-04",
-    "description": "SILO DALLAS",
-    "amount": 28.82,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-04",
-    "description": "7-ELEVEN 34536",
-    "amount": 16.45,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-04",
-    "description": "SILO DALLAS",
-    "amount": 33.14,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-04",
-    "description": "7-ELEVEN 36361",
-    "amount": 7.34,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-04",
-    "description": "SILO DALLAS",
-    "amount": 26.9,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
   },
   {
     "date": "2026-01-03",
@@ -1584,64 +711,10 @@
     "source": "Chase CC"
   },
   {
-    "date": "2026-01-03",
-    "description": "BUC-EE'S #0059",
-    "amount": 24.39,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-03",
-    "description": "TST*NINFAS MEXICAN RESTA",
-    "amount": 120.66,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-03",
-    "description": "PERRYS STEAKHOUSE AND",
-    "amount": 183.97,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-03",
-    "description": "TARGET        00032920",
-    "amount": 40.57,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-03",
-    "description": "SPECS #212",
-    "amount": 47.73,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-03",
-    "description": "91280 - AUSTIN-BERGSTROM",
-    "amount": 14,
-    "category": "Travel",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
     "date": "2026-01-02",
     "description": "STONE CO CLIMBING STONECOCLIMBI TX 01/01",
     "amount": 134.23,
-    "category": "Other",
+    "category": "Health & Fitness",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
@@ -1650,99 +723,18 @@
     "date": "2026-01-02",
     "description": "UPSTART NETWORK RETRY PYMT 28171652 WEB ID",
     "amount": 830.4,
-    "category": "Other",
+    "category": "Debt",
     "type": "expense",
     "who": "Shared",
     "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "ORIG CO NAME:PAYPAL ORIG ID:PAYPAL",
-    "amount": 10,
-    "category": "Subscriptions",
-    "type": "expense",
-    "who": "Shared",
-    "source": "Chase Bank"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "SWA*EXCS_BAG5264305816817",
-    "amount": 35,
-    "category": "Travel",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "BUC-EE'S #0028",
-    "amount": 48.88,
-    "category": "Transportation",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "TST* TONY C'S COAL FIRED",
-    "amount": 146.15,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "LA QUINTA MOTOR INNS",
-    "amount": 2.5,
-    "category": "Travel",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
   },
   {
     "date": "2026-01-02",
     "description": "CINEMARK 182 RSTBAR",
-    "amount": 22.26,
-    "category": "Everyday",
+    "amount": 23.54,
+    "category": "Entertainment",
     "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "PURCHASE INTEREST CHARGE",
-    "amount": 23.84,
-    "category": "Debt",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC2"
-  },
-  {
-    "date": "2026-01-02",
-    "description": "PAYPAL *ROBLOX CORPOR 888-858-2569 CA 01/01",
-    "amount": 19.99,
-    "category": "Other",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle Checking"
-  },
-  {
-    "date": "2026-01-01",
-    "description": "IWON KOREAN BBQ",
-    "amount": 279.64,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
-  },
-  {
-    "date": "2026-01-01",
-    "description": "TST*1860 ITALIA",
-    "amount": 210.56,
-    "category": "Everyday",
-    "type": "expense",
-    "who": "Elle",
-    "source": "Elle CC1"
+    "who": "Shared",
+    "source": "CC 6257"
   }
 ]
