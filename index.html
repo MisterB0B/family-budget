@@ -229,11 +229,33 @@
         .budget-row {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 8px;
+            cursor: pointer; transition: all 0.2s;
         }
+        .budget-row:hover { background: var(--bg-secondary); transform: translateX(4px); }
+        .budget-row:active { transform: scale(0.98); }
         .budget-row .name { display: flex; align-items: center; gap: 8px; }
-        .budget-row .amounts { text-align: right; font-size: 0.9rem; }
+        .budget-row .amounts { text-align: right; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
         .budget-row .spent { color: var(--text-primary); }
         .budget-row .total { color: var(--text-secondary); }
+        .budget-row .arrow { color: var(--text-secondary); font-size: 1.2rem; }
+        
+        /* Category Detail */
+        .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .category-header .icon { font-size: 2rem; }
+        .category-header .info { flex: 1; }
+        .category-header .info h3 { margin-bottom: 4px; }
+        .category-header .info .subtitle { color: var(--text-secondary); font-size: 0.9rem; }
+        .category-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .category-stat { background: var(--bg-primary); padding: 12px; border-radius: 8px; text-align: center; }
+        .category-stat .value { font-size: 1.3rem; font-weight: 700; }
+        .category-stat .label { font-size: 0.75rem; color: var(--text-secondary); }
+        .tx-list { max-height: 50vh; overflow-y: auto; }
+        .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-primary); border-radius: 8px; margin-bottom: 8px; }
+        .tx-item .info { flex: 1; }
+        .tx-item .desc { font-weight: 500; }
+        .tx-item .date { font-size: 0.8rem; color: var(--text-secondary); }
+        .tx-item .amount { font-weight: 600; margin-right: 12px; }
+        .tx-item .delete-tx { color: var(--danger); cursor: pointer; padding: 4px 8px; font-size: 1.2rem; }
 
         /* Empty State */
         .empty-state {
@@ -526,6 +548,38 @@
         </div>
     </div>
 
+    <div id="modal-categoryDetail" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3>Category Spending</h3>
+                <button class="modal-close" onclick="hideModal('categoryDetail')">×</button>
+            </div>
+            <div class="category-header">
+                <span class="icon" id="catDetailIcon"></span>
+                <div class="info">
+                    <h3 id="catDetailName"></h3>
+                    <div class="subtitle" id="catDetailMonth"></div>
+                </div>
+            </div>
+            <div class="category-stats">
+                <div class="category-stat">
+                    <div class="value" id="catDetailSpent" style="color:var(--text-primary);">$0</div>
+                    <div class="label">Spent</div>
+                </div>
+                <div class="category-stat">
+                    <div class="value" id="catDetailRemaining" style="color:var(--accent);">$0</div>
+                    <div class="label">Remaining</div>
+                </div>
+            </div>
+            <div class="progress-bar" style="margin-bottom:16px;height:8px;"><div class="progress-fill" id="catDetailProgress" style="width:0%"></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <span style="font-weight:600;">Transactions</span>
+                <span id="catDetailCount" style="color:var(--text-secondary);font-size:0.85rem;">0 items</span>
+            </div>
+            <div class="tx-list" id="catDetailList"></div>
+        </div>
+    </div>
+
     <script>
         // ========== AUTH ==========
         const PINS = {
@@ -706,11 +760,12 @@
                 const pct = b.budget > 0 ? Math.min((catSpent / b.budget) * 100, 100) : 0;
                 const cls = catSpent > b.budget ? 'over' : pct > 80 ? 'warning' : '';
                 return `
-                    <div class="budget-row">
+                    <div class="budget-row" onclick="showCategoryDetail('${b.category}')">
                         <div class="name">${b.icon} ${b.category}</div>
                         <div class="amounts">
                             <span class="spent">$${catSpent.toFixed(0)}</span>
                             <span class="total">/ $${b.budget}</span>
+                            <span class="arrow">›</span>
                         </div>
                     </div>
                     <div class="progress-bar" style="margin:-4px 0 8px;"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div>
@@ -752,6 +807,74 @@
             hideModal('addTransaction');
             document.getElementById('txDesc').value = '';
             document.getElementById('txAmount').value = '';
+        }
+
+        // ========== CATEGORY DETAIL ==========
+        let currentDetailCategory = null;
+
+        function showCategoryDetail(category) {
+            currentDetailCategory = category;
+            const month = getCurrentMonth();
+            const budget = data.budgets.find(b => b.category === category);
+            if (!budget) return;
+
+            // Filter transactions for this category in current month
+            const catTx = data.transactions.filter(t => 
+                t.category === category && 
+                t.date?.startsWith(month) && 
+                t.type !== 'income'
+            ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+            const spent = catTx.reduce((s, t) => s + t.amount, 0);
+            const remaining = budget.budget - spent;
+            const pct = budget.budget > 0 ? Math.min((spent / budget.budget) * 100, 100) : 0;
+
+            // Update modal header
+            document.getElementById('catDetailIcon').textContent = budget.icon;
+            document.getElementById('catDetailName').textContent = budget.category;
+            document.getElementById('catDetailMonth').textContent = new Date(month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            // Update stats
+            document.getElementById('catDetailSpent').textContent = '$' + spent.toFixed(2);
+            document.getElementById('catDetailSpent').style.color = spent > budget.budget ? 'var(--danger)' : 'var(--text-primary)';
+            document.getElementById('catDetailRemaining').textContent = '$' + remaining.toFixed(2);
+            document.getElementById('catDetailRemaining').style.color = remaining < 0 ? 'var(--danger)' : 'var(--accent)';
+
+            // Update progress bar
+            const progressEl = document.getElementById('catDetailProgress');
+            progressEl.style.width = pct + '%';
+            progressEl.className = 'progress-fill ' + (spent > budget.budget ? 'over' : pct > 80 ? 'warning' : '');
+
+            // Update transaction list
+            document.getElementById('catDetailCount').textContent = catTx.length + ' item' + (catTx.length !== 1 ? 's' : '');
+            document.getElementById('catDetailList').innerHTML = catTx.length ?
+                catTx.map((t, i) => {
+                    const txIndex = data.transactions.indexOf(t);
+                    return `
+                        <div class="tx-item">
+                            <div class="info">
+                                <div class="desc">${t.description}</div>
+                                <div class="date">${formatDateShort(t.date)} ${t.who ? '• ' + t.who : ''}</div>
+                            </div>
+                            <div class="amount">$${t.amount.toFixed(2)}</div>
+                            <span class="delete-tx" onclick="deleteCategoryTx(${txIndex})">×</span>
+                        </div>
+                    `;
+                }).join('') :
+                '<div class="empty-state"><span class="icon">💸</span><br>No spending yet</div>';
+
+            showModal('categoryDetail');
+        }
+
+        function deleteCategoryTx(txIndex) {
+            if (!confirm('Delete this transaction?')) return;
+            data.transactions.splice(txIndex, 1);
+            saveData();
+            renderAll();
+            // Refresh the modal
+            if (currentDetailCategory) {
+                showCategoryDetail(currentDetailCategory);
+            }
         }
 
         // ========== CALENDAR ==========
