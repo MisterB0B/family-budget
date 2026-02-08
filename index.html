@@ -724,16 +724,28 @@
             { category: 'Other', budget: 200, icon: '📦' }
         ];
 
+        // Real balances from Rocket Money - Feb 8, 2026
         const DEFAULT_DEBTS = [
-            { name: 'Capital One', balance: 1000, rate: 26, payment: 68, type: 'credit', priority: 1 },
-            { name: 'Apple Card', balance: 5000, rate: 24, payment: 200, type: 'credit', priority: 2 },
-            { name: 'Amex', balance: 3000, rate: 22, payment: 200, type: 'credit', priority: 3 },
-            { name: 'Chase Credit Card', balance: 1000, rate: 21, payment: 50, type: 'credit', priority: 4 },
-            { name: 'Citi Card', balance: 3000, rate: 20, payment: 284, type: 'credit', priority: 5 },
-            { name: 'Upstart Loan', balance: 15000, rate: 18.5, payment: 830, type: 'loan', priority: 6 },
-            { name: 'Monterey Financial (Tax)', balance: 8000, rate: 15, payment: 560, type: 'loan', priority: 7 },
-            { name: 'Fifth Third Bank (Boat)', balance: 70976, rate: 7.4, payment: 640, type: 'auto', priority: 8 },
-            { name: 'GM Financial (Truck)', balance: 54568, rate: 4.9, payment: 826, type: 'auto', priority: 9 }
+            // Credit Cards (sorted by APR - avalanche method)
+            { name: 'Capital One QuicksilverOne', balance: 5010, rate: 26, payment: 150, type: 'credit' },
+            { name: 'PayPal Credit', balance: 6180, rate: 24, payment: 185, type: 'credit' },
+            { name: 'Apple Card', balance: 5310, rate: 24, payment: 159, type: 'credit' },
+            { name: 'Amex Gold Card', balance: 2450, rate: 22, payment: 74, type: 'credit' },
+            { name: 'Capital One Savor', balance: 1950, rate: 22, payment: 59, type: 'credit' },
+            { name: 'Chase E. DODGE (Elle)', balance: 24200, rate: 21, payment: 726, type: 'credit' },
+            { name: 'Chase Ultimate Rewards (13k)', balance: 13000, rate: 21, payment: 390, type: 'credit' },
+            { name: 'Chase Ultimate Rewards (2k)', balance: 2180, rate: 21, payment: 65, type: 'credit' },
+            { name: 'Chase Ultimate Rewards (1k)', balance: 931, rate: 21, payment: 28, type: 'credit' },
+            { name: 'Chase Southwest', balance: 613, rate: 21, payment: 25, type: 'credit' },
+            { name: 'Chase Prime Visa', balance: 326, rate: 21, payment: 25, type: 'credit' },
+            { name: 'Costco Citi Visa', balance: 9690, rate: 20, payment: 291, type: 'credit' },
+            // Loans
+            { name: 'Upstart Loan', balance: 15000, rate: 18.5, payment: 830, type: 'loan' },
+            { name: 'Monterey Financial (Tax)', balance: 8000, rate: 15, payment: 560, type: 'loan' },
+            // Asset-backed (low priority - keep paying minimums)
+            { name: 'Fifth Third Bank (Boat)', balance: 70976, rate: 7.4, payment: 640, type: 'auto' },
+            { name: 'Rocket Mortgage (House)', balance: 377000, rate: 5.5, payment: 3542, type: 'mortgage' },
+            { name: 'GM Financial (Truck)', balance: 54568, rate: 4.9, payment: 826, type: 'auto' }
         ];
 
         let data = {
@@ -749,14 +761,28 @@
         let selectedDate = new Date().toISOString().split('T')[0];
 
         function loadData() {
-            const saved = localStorage.getItem('dodge_family_data_v2');
+            const saved = localStorage.getItem('dodge_family_data_v3');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 data = { ...data, ...parsed };
             }
-            // Migrate old data
+            // Migrate from v2 - keep transactions/events/todos/shopping, reset debts to real numbers
+            const v2Saved = localStorage.getItem('dodge_family_data_v2');
+            if (v2Saved && !saved) {
+                const parsed = JSON.parse(v2Saved);
+                data = { 
+                    transactions: parsed.transactions || [],
+                    budgets: parsed.budgets || DEFAULT_BUDGETS,
+                    debts: DEFAULT_DEBTS, // Reset to real Rocket Money numbers
+                    events: parsed.events || [],
+                    todos: parsed.todos || [],
+                    shopping: parsed.shopping || []
+                };
+                saveData();
+            }
+            // Migrate from v1
             const oldSaved = localStorage.getItem('dodge_family_data');
-            if (oldSaved && !saved) {
+            if (oldSaved && !saved && !v2Saved) {
                 const parsed = JSON.parse(oldSaved);
                 data = { ...data, ...parsed, debts: DEFAULT_DEBTS };
                 saveData();
@@ -766,7 +792,7 @@
         }
 
         function saveData() {
-            localStorage.setItem('dodge_family_data_v2', JSON.stringify(data));
+            localStorage.setItem('dodge_family_data_v3', JSON.stringify(data));
         }
 
         function today() { return new Date().toISOString().split('T')[0]; }
