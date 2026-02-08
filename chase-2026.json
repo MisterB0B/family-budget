@@ -648,6 +648,42 @@
     "source": "Chase Bank"
   },
   {
+    "date": "2026-01-12",
+    "description": "Interest Charge (Amex)",
+    "amount": 56.85,
+    "category": "Debt",
+    "who": "Shared",
+    "source": "Amex",
+    "type": "expense"
+  },
+  {
+    "date": "2026-01-11",
+    "description": "STEAK 'N SHAKE ARLINGTON",
+    "amount": 15.04,
+    "category": "Dining",
+    "who": "Shared",
+    "source": "Amex",
+    "type": "expense"
+  },
+  {
+    "date": "2026-01-10",
+    "description": "99 RANCH #1108 FRISCO (Asian grocery)",
+    "amount": 65.46,
+    "category": "Everyday",
+    "who": "Shared",
+    "source": "Amex",
+    "type": "expense"
+  },
+  {
+    "date": "2026-01-10",
+    "description": "HAIDILAO HOT POT FRISCO",
+    "amount": 64.1,
+    "category": "Dining",
+    "who": "Shared",
+    "source": "Amex",
+    "type": "expense"
+  },
+  {
     "date": "2026-01-09",
     "description": "SPO*WILDPITCHSPORTSBAR&amp;GR",
     "amount": 84.34,
