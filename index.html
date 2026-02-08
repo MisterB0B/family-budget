@@ -574,17 +574,20 @@
 
         // ========== DATA ==========
         const DEFAULT_BUDGETS = [
-            { category: 'Groceries', budget: 800, icon: '🛒' },
-            { category: 'Dining Out', budget: 400, icon: '🍽️' },
-            { category: 'Gas', budget: 300, icon: '⛽' },
-            { category: 'Utilities', budget: 400, icon: '💡' },
-            { category: 'Subscriptions', budget: 200, icon: '📱' },
+            { category: 'Everyday', budget: 4200, icon: '🛒' },
+            { category: 'Home', budget: 3500, icon: '🏠' },
+            { category: 'Transportation', budget: 1840, icon: '🚗' },
+            { category: 'Insurance', budget: 1640, icon: '🛡️' },
+            { category: 'Debt', budget: 920, icon: '💳' },
+            { category: 'Children', budget: 900, icon: '👶' },
+            { category: 'Utilities', budget: 522, icon: '💡' },
+            { category: 'Education', budget: 300, icon: '📚' },
+            { category: 'Pets', budget: 50, icon: '🐕' },
+            { category: 'Health/Medical', budget: 30, icon: '💊' },
             { category: 'Entertainment', budget: 200, icon: '🎬' },
-            { category: 'Shopping', budget: 300, icon: '🛍️' },
-            { category: 'Health', budget: 150, icon: '💊' },
-            { category: 'Kids', budget: 200, icon: '👶' },
-            { category: 'Home', budget: 200, icon: '🏠' },
-            { category: 'Auto', budget: 150, icon: '🚗' },
+            { category: 'Gifts', budget: 100, icon: '🎁' },
+            { category: 'Travel', budget: 200, icon: '✈️' },
+            { category: 'Technology', budget: 100, icon: '📱' },
             { category: 'Other', budget: 200, icon: '📦' }
         ];
 
@@ -995,17 +998,20 @@
 
         function mapCategory(cat) {
             const c = (cat || '').toLowerCase();
-            if (c.includes('grocer') || c.includes('food')) return 'Groceries';
-            if (c.includes('restaurant') || c.includes('dining')) return 'Dining Out';
-            if (c.includes('gas') || c.includes('fuel')) return 'Gas';
-            if (c.includes('util')) return 'Utilities';
-            if (c.includes('subscri')) return 'Subscriptions';
-            if (c.includes('entertain')) return 'Entertainment';
-            if (c.includes('shop') || c.includes('amazon')) return 'Shopping';
-            if (c.includes('health') || c.includes('medical')) return 'Health';
-            if (c.includes('kid') || c.includes('child')) return 'Kids';
-            if (c.includes('home')) return 'Home';
-            if (c.includes('auto') || c.includes('car')) return 'Auto';
+            if (c.includes('grocer') || c.includes('food') || c.includes('dining') || c.includes('restaurant')) return 'Everyday';
+            if (c.includes('gas') || c.includes('fuel') || c.includes('auto') || c.includes('car') || c.includes('parking')) return 'Transportation';
+            if (c.includes('util') || c.includes('electric') || c.includes('water') || c.includes('internet') || c.includes('phone')) return 'Utilities';
+            if (c.includes('insur')) return 'Insurance';
+            if (c.includes('debt') || c.includes('loan') || c.includes('credit') || c.includes('payment')) return 'Debt';
+            if (c.includes('kid') || c.includes('child') || c.includes('school') || c.includes('daycare')) return 'Children';
+            if (c.includes('edu') || c.includes('tuition') || c.includes('book')) return 'Education';
+            if (c.includes('pet') || c.includes('vet') || c.includes('dog') || c.includes('cat')) return 'Pets';
+            if (c.includes('health') || c.includes('medical') || c.includes('doctor') || c.includes('pharmacy')) return 'Health/Medical';
+            if (c.includes('entertain') || c.includes('movie') || c.includes('stream')) return 'Entertainment';
+            if (c.includes('gift')) return 'Gifts';
+            if (c.includes('travel') || c.includes('hotel') || c.includes('flight') || c.includes('vacation')) return 'Travel';
+            if (c.includes('tech') || c.includes('subscri') || c.includes('software')) return 'Technology';
+            if (c.includes('home') || c.includes('rent') || c.includes('mortgage') || c.includes('repair')) return 'Home';
             return 'Other';
         }
 
