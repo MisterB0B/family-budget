@@ -252,11 +252,20 @@
     <div id="loginScreen" class="login-screen">
         <div class="login-box">
             <h1>🏠 Dodge Family</h1>
-            <p class="subtitle">Family Hub</p>
-            <input type="email" id="loginEmail" placeholder="Email">
-            <input type="password" id="loginPassword" placeholder="Password">
-            <button onclick="attemptLogin()">Sign In</button>
-            <p class="login-error" id="loginError">Invalid credentials</p>
+            <p class="subtitle">Enter your PIN</p>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+                <button id="btnBob" class="pin-user active" onclick="selectUser('Bob')">👨 Bob</button>
+                <button id="btnElle" class="pin-user" onclick="selectUser('Elle')">👩 Elle</button>
+            </div>
+            <style>
+                .pin-user { flex:1; padding:14px; border:2px solid var(--bg-tertiary); border-radius:8px; background:var(--bg-primary); color:var(--text-secondary); font-size:1rem; cursor:pointer; }
+                .pin-user.active { border-color:var(--accent); color:var(--accent); background:rgba(6,214,160,0.1); }
+                .pin-input { width:100%; padding:18px; font-size:1.5rem; text-align:center; letter-spacing:12px; border:2px solid var(--bg-tertiary); border-radius:8px; background:var(--bg-primary); color:var(--text-primary); }
+                .pin-input:focus { border-color:var(--accent); outline:none; }
+            </style>
+            <input type="password" id="loginPin" class="pin-input" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+            <button onclick="attemptLogin()" style="margin-top:16px;">Sign In</button>
+            <p class="login-error" id="loginError">Wrong PIN</p>
         </div>
     </div>
 
@@ -519,21 +528,31 @@
 
     <script>
         // ========== AUTH ==========
-        const USERS = {
-            'bob@ledstringers.com': { password: 'LightPark2026', name: 'Bob' },
-            'elleyenny@gmail.com': { password: 'Family2026', name: 'Elle' }
+        const PINS = {
+            'Bob': '1981',
+            'Elle': '0807'
         };
         let currentUser = null;
+        let selectedUser = 'Bob';
+
+        function selectUser(name) {
+            selectedUser = name;
+            document.getElementById('btnBob').classList.toggle('active', name === 'Bob');
+            document.getElementById('btnElle').classList.toggle('active', name === 'Elle');
+            document.getElementById('loginPin').value = '';
+            document.getElementById('loginPin').focus();
+        }
 
         function attemptLogin() {
-            const email = document.getElementById('loginEmail').value.toLowerCase().trim();
-            const pw = document.getElementById('loginPassword').value;
-            if (USERS[email] && USERS[email].password === pw) {
-                currentUser = { email, name: USERS[email].name };
+            const pin = document.getElementById('loginPin').value;
+            if (PINS[selectedUser] && PINS[selectedUser] === pin) {
+                currentUser = { name: selectedUser };
                 localStorage.setItem('dodge_family_user', JSON.stringify(currentUser));
                 showApp();
             } else {
                 document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginPin').value = '';
+                setTimeout(() => document.getElementById('loginError').style.display = 'none', 2000);
             }
         }
 
@@ -550,7 +569,8 @@
             location.reload();
         }
 
-        document.getElementById('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') attemptLogin(); });
+        document.getElementById('loginPin').addEventListener('keypress', e => { if (e.key === 'Enter') attemptLogin(); });
+        document.getElementById('loginPin').addEventListener('input', e => { if (e.target.value.length === 4) attemptLogin(); });
 
         // ========== DATA ==========
         const DEFAULT_BUDGETS = [
