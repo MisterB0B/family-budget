@@ -368,30 +368,17 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 const STORAGE_KEY = 'family_budget_config';
 let CONFIG = null;
 
-// Load config from localStorage with error handling
 try {
   const raw = localStorage.getItem(STORAGE_KEY);
-  console.log('[Config] Raw from localStorage:', raw);
   if (raw && raw !== 'null' && raw !== 'undefined') {
     CONFIG = JSON.parse(raw);
-    if (!CONFIG || !CONFIG.url || !CONFIG.key) {
-      console.warn('[Config] Invalid config structure, resetting:', CONFIG);
-      CONFIG = null;
-    } else {
-      console.log('[Config] Loaded successfully:', CONFIG.url);
-    }
+    if (!CONFIG || !CONFIG.url || !CONFIG.key) { CONFIG = null; }
+    else { console.log('[Config] Loaded:', CONFIG.url); }
   }
-} catch(e) {
-  console.error('[Config] Failed to load from localStorage:', e);
-  CONFIG = null;
-}
+} catch(e) { console.error('[Config] Load failed:', e); CONFIG = null; }
 
 function showConfigPrompt() {
-  if (CONFIG && CONFIG.url && CONFIG.key) {
-    console.log('[Config] Already configured, skipping prompt');
-    return false;
-  }
-  console.log('[Config] Showing setup prompt');
+  if (CONFIG && CONFIG.url && CONFIG.key) return false;
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-title">Setup <span class="modal-close" onclick="closeModalForce()">✕</span></div>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Enter your Supabase project credentials. Find them in Project Settings → API.</p>
@@ -408,59 +395,50 @@ function saveConfig() {
   const urlEl = document.getElementById('cfg-url');
   const keyEl = document.getElementById('cfg-key');
   const errEl = document.getElementById('cfg-error');
-
-  if (!urlEl || !keyEl) {
-    console.error('[Config] Form elements not found!');
-    return;
-  }
+  if (!urlEl || !keyEl) return;
 
   const url = urlEl.value.trim().replace(/\/$/,'');
   const key = keyEl.value.trim();
 
-  if (!url || !key) {
-    if (errEl) errEl.textContent = 'Please fill in both fields';
-    return toast('Please fill in both fields');
-  }
-
-  if (!url.startsWith('https://')) {
-    if (errEl) errEl.textContent = 'URL must start with https://';
-    return;
-  }
+  if (!url || !key) { if (errEl) errEl.textContent = 'Please fill in both fields'; return; }
+  if (!url.startsWith('https://')) { if (errEl) errEl.textContent = 'URL must start with https://'; return; }
 
   CONFIG = { url, key };
-  const configJson = JSON.stringify(CONFIG);
-
   try {
-    localStorage.setItem(STORAGE_KEY, configJson);
-    // Verify it was actually saved
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
     const verify = localStorage.getItem(STORAGE_KEY);
-    if (verify !== configJson) {
-      console.error('[Config] Verification failed! Saved:', configJson, 'Got back:', verify);
-      if (errEl) errEl.textContent = 'Failed to save config. Check browser privacy settings.';
-      return;
+    if (!verify || JSON.parse(verify).url !== url) {
+      if (errEl) errEl.textContent = 'Failed to save. Check browser privacy settings.';
+      CONFIG = null; return;
     }
-    console.log('[Config] Saved and verified successfully');
   } catch(e) {
-    console.error('[Config] localStorage.setItem failed:', e);
-    if (errEl) errEl.textContent = 'Cannot save: ' + e.message + '. Are you in private browsing?';
-    return;
+    if (errEl) errEl.textContent = 'Cannot save: ' + e.message;
+    CONFIG = null; return;
   }
-
   closeModalForce();
   toast('Config saved ✓');
   initSupabase();
 }
 
 function reconfigureSupabase() {
+  if (!confirm('This will clear your Supabase config. Continue?')) return;
   CONFIG = null;
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  signOut();
   showConfigPrompt();
 }
 
-// ============ SUPABASE CLIENT (lightweight) ============
+// ============ HTML ESCAPING ============
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============ SUPABASE CLIENT ============
 let sb = null;
 let currentUser = null;
-let subscriptions = [];
+let realtimeWs = null;
+let refreshTimer = null;
 
 class SupabaseClient {
   constructor(url, key) {
@@ -472,14 +450,42 @@ class SupabaseClient {
 
   headers() {
     const h = { 'apikey': this.key, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
-    if (this.token) h['Authorization'] = `Bearer ${this.token}`;
-    else h['Authorization'] = `Bearer ${this.key}`;
+    h['Authorization'] = `Bearer ${this.token || this.key}`;
     return h;
   }
 
+  async _fetch(url, opts = {}) {
+    try {
+      const r = await fetch(url, opts);
+      if (r.status === 401) {
+        console.warn('[Supabase] 401 — attempting token refresh');
+        const refreshed = await this.refreshSession();
+        if (refreshed?.access_token) {
+          opts.headers = { ...opts.headers, 'Authorization': `Bearer ${this.token}` };
+          if (opts.headers['apikey']) opts.headers['apikey'] = this.key;
+          const r2 = await fetch(url, opts);
+          return r2;
+        } else {
+          signOut();
+          toast('Session expired. Please sign in again.');
+          throw new Error('Session expired');
+        }
+      }
+      return r;
+    } catch(e) {
+      if (e.message === 'Session expired') throw e;
+      if (e.name === 'TypeError' && e.message.includes('fetch')) {
+        toast('Network error — check your connection');
+      }
+      throw e;
+    }
+  }
+
   async rpc(fn, params) {
-    const r = await fetch(`${this.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(params) });
-    return r.json();
+    const r = await this._fetch(`${this.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(params) });
+    const data = await r.json();
+    if (data?.message || data?.error) throw new Error(data.message || data.error);
+    return data;
   }
 
   async signUp(email, password, displayName) {
@@ -487,6 +493,10 @@ class SupabaseClient {
       method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, data: { display_name: displayName } })
     });
+    if (!r.ok && r.status !== 200) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error?.message || err.msg || err.error_description || `Signup failed (${r.status})`);
+    }
     const data = await r.json();
     if (data.error || data.msg) throw new Error(data.error?.message || data.msg || 'Signup failed');
     if (data.access_token) { this.token = data.access_token; this.refreshToken = data.refresh_token; }
@@ -498,6 +508,10 @@ class SupabaseClient {
       method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error_description || err.error || err.msg || `Sign in failed (${r.status})`);
+    }
     const data = await r.json();
     if (data.error) throw new Error(data.error_description || data.error);
     this.token = data.access_token;
@@ -507,17 +521,40 @@ class SupabaseClient {
 
   async refreshSession() {
     if (!this.refreshToken) return null;
-    const r = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
-      method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: this.refreshToken })
-    });
-    const data = await r.json();
-    if (data.access_token) { this.token = data.access_token; this.refreshToken = data.refresh_token; }
-    return data;
+    try {
+      const r = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: this.refreshToken })
+      });
+      if (!r.ok) {
+        console.warn('[Auth] Refresh failed:', r.status);
+        return null;
+      }
+      const data = await r.json();
+      if (data.access_token) {
+        this.token = data.access_token;
+        this.refreshToken = data.refresh_token;
+        saveSession();
+        console.log('[Auth] Token refreshed');
+      }
+      return data;
+    } catch(e) {
+      console.error('[Auth] Refresh error:', e);
+      return null;
+    }
+  }
+
+  async signOutServer() {
+    if (!this.token) return;
+    try {
+      await fetch(`${this.url}/auth/v1/logout`, {
+        method: 'POST', headers: { 'apikey': this.key, 'Authorization': `Bearer ${this.token}` }
+      });
+    } catch(e) { /* best effort */ }
   }
 
   async getUser() {
-    const r = await fetch(`${this.url}/auth/v1/user`, { headers: { 'apikey': this.key, 'Authorization': `Bearer ${this.token}` } });
+    const r = await this._fetch(`${this.url}/auth/v1/user`, { headers: { 'apikey': this.key, 'Authorization': `Bearer ${this.token}` } });
     return r.json();
   }
 
@@ -526,29 +563,152 @@ class SupabaseClient {
     if (filters) url += '&' + filters;
     if (order) url += '&order=' + order;
     if (limit) url += '&limit=' + limit;
-    const r = await fetch(url, { headers: this.headers() });
-    return r.json();
+    const r = await this._fetch(url, { headers: this.headers() });
+    const data = await r.json();
+    if (!Array.isArray(data)) {
+      console.error(`[Data] query ${table} returned non-array:`, data);
+      if (data?.message) toast(`Error loading ${table}: ${data.message}`);
+      return [];
+    }
+    return data;
   }
 
   async insert(table, data) {
-    const r = await fetch(`${this.url}/rest/v1/${table}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(data) });
-    return r.json();
+    const r = await this._fetch(`${this.url}/rest/v1/${table}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(data) });
+    const result = await r.json();
+    if (result?.message || result?.error) throw new Error(result.message || result.error);
+    return result;
   }
 
   async update(table, match, data) {
     let url = `${this.url}/rest/v1/${table}?`;
     for (const [k,v] of Object.entries(match)) url += `${k}=eq.${encodeURIComponent(v)}&`;
-    const r = await fetch(url, { method: 'PATCH', headers: this.headers(), body: JSON.stringify(data) });
-    return r.json();
+    const r = await this._fetch(url, { method: 'PATCH', headers: this.headers(), body: JSON.stringify(data) });
+    const result = await r.json();
+    if (result?.message || result?.error) throw new Error(result.message || result.error);
+    return result;
   }
 
   async remove(table, match) {
     let url = `${this.url}/rest/v1/${table}?`;
     for (const [k,v] of Object.entries(match)) url += `${k}=eq.${encodeURIComponent(v)}&`;
-    const r = await fetch(url, { method: 'DELETE', headers: { ...this.headers(), 'Prefer': 'return=minimal' } });
-    return r.ok;
+    const r = await this._fetch(url, { method: 'DELETE', headers: { ...this.headers(), 'Prefer': 'return=minimal' } });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.message || `Delete failed (${r.status})`);
+    }
+    return true;
   }
+}
 
+// ============ REALTIME ============
+function connectRealtime() {
+  if (!sb || !sb.token) return;
+  disconnectRealtime();
+  const wsUrl = CONFIG.url.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + CONFIG.key + '&vsn=1.0.0';
+  console.log('[Realtime] Connecting...');
+  try {
+    realtimeWs = new WebSocket(wsUrl);
+  } catch(e) { console.error('[Realtime] WebSocket creation failed:', e); return; }
+  let heartbeatRef = 0;
+  let heartbeatInterval = null;
+  const tables = ['expenses','income','categories','savings_goals','recurring_expenses','debts','debt_payments','payment_methods'];
+
+  realtimeWs.onopen = () => {
+    console.log('[Realtime] Connected');
+    // Join channels for each table
+    tables.forEach((table, i) => {
+      const msg = JSON.stringify({
+        topic: `realtime:public:${table}`,
+        event: 'phx_join',
+        payload: { config: { broadcast: { self: false }, presence: { key: '' }, postgres_changes: [{ event: '*', schema: 'public', table }] } },
+        ref: String(i + 1)
+      });
+      realtimeWs.send(msg);
+    });
+    // Heartbeat every 30s
+    heartbeatInterval = setInterval(() => {
+      if (realtimeWs?.readyState === WebSocket.OPEN) {
+        realtimeWs.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: String(++heartbeatRef + 100) }));
+      }
+    }, 30000);
+  };
+
+  realtimeWs.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data);
+      if (msg.event === 'postgres_changes') {
+        const change = msg.payload?.data;
+        if (change) {
+          console.log('[Realtime] Change on', msg.topic, change.type);
+          // Debounce reload — batch changes within 500ms
+          clearTimeout(realtimeWs._reloadTimeout);
+          realtimeWs._reloadTimeout = setTimeout(async () => {
+            await loadAllData();
+            renderDashboard();
+            renderTransactions();
+            // Re-render current active tab
+            const activeTab = document.querySelector('.tab.active')?.dataset?.page;
+            if (activeTab === 'recurring') renderRecurring();
+            if (activeTab === 'debts') renderDebts();
+            if (activeTab === 'categories') renderCategories();
+            if (activeTab === 'settings') renderPaymentMethods();
+            console.log('[Realtime] Data refreshed from remote change');
+          }, 500);
+        }
+      }
+    } catch(e) { /* ignore non-JSON or parse errors */ }
+  };
+
+  realtimeWs.onclose = (event) => {
+    console.log('[Realtime] Disconnected:', event.code, event.reason);
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    // Auto-reconnect after 5s if we still have a session
+    if (currentUser && sb?.token) {
+      setTimeout(() => {
+        if (currentUser && sb?.token) {
+          console.log('[Realtime] Reconnecting...');
+          connectRealtime();
+        }
+      }, 5000);
+    }
+  };
+
+  realtimeWs.onerror = (err) => {
+    console.error('[Realtime] Error:', err);
+  };
+}
+
+function disconnectRealtime() {
+  if (realtimeWs) {
+    try { realtimeWs.close(); } catch(e) {}
+    realtimeWs = null;
+  }
+}
+
+// ============ TOKEN REFRESH ============
+function startTokenRefresh() {
+  stopTokenRefresh();
+  // Refresh token every 50 minutes (tokens expire at 60 min)
+  refreshTimer = setInterval(async () => {
+    if (sb && sb.refreshToken) {
+      console.log('[Auth] Periodic token refresh...');
+      const result = await sb.refreshSession();
+      if (result?.access_token) {
+        // Reconnect realtime with new token
+        connectRealtime();
+      } else {
+        console.warn('[Auth] Periodic refresh failed');
+        stopTokenRefresh();
+        signOut();
+        toast('Session expired. Please sign in again.');
+      }
+    }
+  }, 50 * 60 * 1000);
+}
+
+function stopTokenRefresh() {
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
 }
 
 // ============ STATE ============
@@ -568,35 +728,51 @@ let isSignUp = false;
 function initSupabase() {
   if (!CONFIG) { showConfigPrompt(); return; }
   sb = new SupabaseClient(CONFIG.url, CONFIG.key);
-  
+  console.log('[Init] SupabaseClient created for', CONFIG.url);
+
   // Check for saved session
   const saved = localStorage.getItem('fb_session');
   if (saved) {
     try {
       const s = JSON.parse(saved);
+      if (!s.token || !s.refreshToken) throw new Error('Missing tokens');
       sb.token = s.token;
       sb.refreshToken = s.refreshToken;
       currentUser = s.user;
       sb.refreshSession().then(d => {
         if (d?.access_token) {
-          sb.token = d.access_token;
+          currentUser = d.user || currentUser;
           saveSession();
           showMain();
         } else {
+          console.warn('[Init] Session refresh returned no token, clearing');
+          localStorage.removeItem('fb_session');
           showAuth();
         }
-      }).catch(() => showAuth());
-    } catch(e) { showAuth(); }
+      }).catch(e => {
+        console.error('[Init] Session refresh failed:', e);
+        localStorage.removeItem('fb_session');
+        showAuth();
+      });
+    } catch(e) {
+      console.error('[Init] Bad saved session:', e);
+      localStorage.removeItem('fb_session');
+      showAuth();
+    }
   } else {
     showAuth();
   }
 }
 
 function saveSession() {
-  localStorage.setItem('fb_session', JSON.stringify({ token: sb.token, refreshToken: sb.refreshToken, user: currentUser }));
+  try {
+    localStorage.setItem('fb_session', JSON.stringify({ token: sb.token, refreshToken: sb.refreshToken, user: currentUser }));
+  } catch(e) { console.error('[Session] Save failed:', e); }
 }
 
 function showAuth() {
+  stopTokenRefresh();
+  disconnectRealtime();
   document.getElementById('auth-screen').classList.add('active');
   document.getElementById('main-screen').classList.remove('active');
 }
@@ -605,8 +781,15 @@ async function showMain() {
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('main-screen').classList.add('active');
   document.getElementById('user-name').textContent = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || '';
-  await loadAllData();
-  renderDashboard();
+  startTokenRefresh();
+  try {
+    await loadAllData();
+    renderDashboard();
+  } catch(e) {
+    console.error('[Init] Failed to load data:', e);
+    toast('Failed to load data. Check your connection.');
+  }
+  connectRealtime();
 }
 
 // ============ AUTH ============
@@ -625,31 +808,42 @@ async function handleAuth() {
   const pass = document.getElementById('auth-pass').value;
   const name = document.getElementById('auth-name').value.trim();
   const errEl = document.getElementById('auth-error');
+  const btn = document.getElementById('auth-submit');
   errEl.textContent = '';
   if (!email || !pass) { errEl.textContent = 'Please fill in all fields'; return; }
   if (!sb) {
-    errEl.textContent = 'Supabase not initialized. Please reconfigure in Settings or reload.';
-    console.error('[Auth] sb is null — CONFIG:', CONFIG);
+    errEl.textContent = 'Supabase not initialized. Reload the page or reconfigure.';
     return;
   }
+  btn.disabled = true;
+  btn.textContent = isSignUp ? 'Signing up...' : 'Signing in...';
   try {
     let data;
     if (isSignUp) {
+      if (pass.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; return; }
       data = await sb.signUp(email, pass, name || email.split('@')[0]);
-      if (!data.access_token && data.id) { errEl.textContent = 'Check your email for confirmation link!'; return; }
+      if (!data.access_token && data.id) { errEl.textContent = 'Check your email for a confirmation link!'; return; }
     } else {
       data = await sb.signIn(email, pass);
     }
     currentUser = data.user;
     saveSession();
     showMain();
-  } catch(e) { errEl.textContent = e.message; }
+  } catch(e) {
+    console.error('[Auth] Error:', e);
+    errEl.textContent = e.message || 'Authentication failed';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+  }
 }
 
-function signOut() {
+async function signOut() {
+  stopTokenRefresh();
+  disconnectRealtime();
+  if (sb) { await sb.signOutServer(); sb.token = null; sb.refreshToken = null; }
   localStorage.removeItem('fb_session');
   currentUser = null;
-  if (sb) { sb.token = null; sb.refreshToken = null; }
   showAuth();
 }
 
@@ -666,14 +860,14 @@ async function loadAllData() {
     sb.query('debt_payments', { order: 'payment_date.desc,created_at.desc' }),
     sb.query('payment_methods', { order: 'sort_order.asc,name.asc' })
   ]);
-  categories = Array.isArray(cats) ? cats : [];
-  expenses = Array.isArray(exp) ? exp : [];
-  incomeItems = Array.isArray(inc) ? inc : [];
-  recurringExpenses = Array.isArray(rec) ? rec : [];
-  savingsGoals = Array.isArray(goals) ? goals : [];
-  debts = Array.isArray(dts) ? dts : [];
-  debtPayments = Array.isArray(dpay) ? dpay : [];
-  paymentMethods = Array.isArray(pmethods) ? pmethods : [];
+  categories = cats;
+  expenses = exp;
+  incomeItems = inc;
+  recurringExpenses = rec;
+  savingsGoals = goals;
+  debts = dts;
+  debtPayments = dpay;
+  paymentMethods = pmethods;
 }
 
 function monthStr() {
@@ -728,7 +922,7 @@ function renderDashboard() {
   const goalsHtml = savingsGoals.map(g => {
     const pct = Math.min((Number(g.current_amount)/Number(g.target_amount))*100, 100);
     return `<div class="goal-card" onclick="openGoalModal('${g.id}')">
-      <div class="goal-top"><span class="goal-name">${g.icon} ${g.name}</span><span class="goal-pct">${pct.toFixed(0)}%</span></div>
+      <div class="goal-top"><span class="goal-name">${g.icon} ${esc(g.name)}</span><span class="goal-pct">${pct.toFixed(0)}%</span></div>
       <div class="goal-track"><div class="goal-fill" style="width:${pct}%"></div></div>
       <div class="goal-bottom"><span>${fmt(g.current_amount)}</span><span>${fmt(g.target_amount)}</span></div>
     </div>`;
@@ -799,7 +993,7 @@ function renderTxList(items, containerId) {
     return `<div class="tx-item" onclick="openEditTx('${t._type}','${t.id}')">
       <div class="tx-icon" style="background:${bgColor}20">${icon}</div>
       <div class="tx-info">
-        <div class="tx-desc">${t.description || t.source || cat?.name || 'Transaction'}</div>
+        <div class="tx-desc">${esc(t.description || t.source || cat?.name || 'Transaction')}</div>
         <div class="tx-meta">
           <span class="tx-owner ${t.owner}">${t.owner}</span>
           <span>${t.expense_date || t.income_date || ''}</span>
@@ -819,7 +1013,7 @@ function renderRecurring() {
     return `<div class="rec-item" onclick="openRecurringModal('${r.id}')">
       <div class="tx-icon" style="background:${cat?.color||'var(--purple)'}20">${cat?.icon||'🔄'}</div>
       <div class="rec-info">
-        <div class="rec-desc">${r.description}</div>
+        <div class="rec-desc">${esc(r.description)}</div>
         <div class="rec-freq">${r.frequency} · Day ${r.day_of_month} · <span class="tx-owner ${r.owner}">${r.owner}</span></div>
       </div>
       <div class="rec-amount">${fmt(r.amount)}</div>
@@ -1030,7 +1224,7 @@ function openEditTx(type, id) {
       <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="edit-amount" type="number" step="0.01" value="${item.amount}"></div>
       <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="edit-cat">${catOptions(false, item.category_id)}</select></div>
       <div class="form-group"><label class="form-label">Payment Method</label><select class="form-input" id="edit-pm">${pmOptions(item.payment_method_id)}</select></div>
-      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="edit-desc" value="${item.description||''}"></div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="edit-desc" value="${esc(item.description||'')}"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="edit-date" type="date" value="${item.expense_date}"></div>
         <div class="form-group"><label class="form-label">Owner</label>
@@ -1043,7 +1237,7 @@ function openEditTx(type, id) {
         </div>
       </div>
       <div class="form-group"><label class="form-label">Tags</label><div class="tags-input" id="edit-tags-wrap">${tags}<input placeholder="Add tag..." onkeydown="handleTagKey(event,'edit-tags')"></div><input type="hidden" id="edit-tags" value="${(item.tags||[]).join(',')}"></div>
-      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="edit-notes" rows="2">${item.notes||''}</textarea></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="edit-notes" rows="2">${esc(item.notes||'')}</textarea></div>
       <button class="form-submit" onclick="updateExpense('${id}')">Update</button>
       <button class="form-delete" onclick="deleteTx('expenses','${id}')">Delete Expense</button>
     `);
@@ -1051,7 +1245,7 @@ function openEditTx(type, id) {
     openModal(`
       <div class="modal-title">Edit Income <span class="modal-close" onclick="closeModalForce()">✕</span></div>
       <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="edit-inc-amount" type="number" step="0.01" value="${item.amount}"></div>
-      <div class="form-group"><label class="form-label">Source</label><input class="form-input" id="edit-inc-source" value="${item.source||''}"></div>
+      <div class="form-group"><label class="form-label">Source</label><input class="form-input" id="edit-inc-source" value="${esc(item.source||'')}"></div>
       <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="edit-inc-date" type="date" value="${item.income_date}"></div>
       <div class="form-group"><label class="form-label">Owner</label>
         <div class="owner-pills">
@@ -1068,36 +1262,42 @@ function openEditTx(type, id) {
 }
 
 async function updateExpense(id) {
-  await sb.update('expenses', { id }, {
-    amount: parseFloat(document.getElementById('edit-amount').value),
-    category_id: document.getElementById('edit-cat').value || null,
-    payment_method_id: document.getElementById('edit-pm').value || null,
-    description: document.getElementById('edit-desc').value,
-    expense_date: document.getElementById('edit-date').value,
-    owner: document.getElementById('edit-owner').value,
-    notes: document.getElementById('edit-notes').value,
-    tags: document.getElementById('edit-tags').value ? document.getElementById('edit-tags').value.split(',') : []
-  });
-  closeModalForce(); toast('Updated ✓');
-  await loadAllData(); renderDashboard(); renderTransactions();
+  try {
+    await sb.update('expenses', { id }, {
+      amount: parseFloat(document.getElementById('edit-amount').value),
+      category_id: document.getElementById('edit-cat').value || null,
+      payment_method_id: document.getElementById('edit-pm').value || null,
+      description: document.getElementById('edit-desc').value,
+      expense_date: document.getElementById('edit-date').value,
+      owner: document.getElementById('edit-owner').value,
+      notes: document.getElementById('edit-notes').value,
+      tags: document.getElementById('edit-tags').value ? document.getElementById('edit-tags').value.split(',') : []
+    });
+    closeModalForce(); toast('Updated ✓');
+    await loadAllData(); renderDashboard(); renderTransactions();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function updateIncome(id) {
-  await sb.update('income', { id }, {
-    amount: parseFloat(document.getElementById('edit-inc-amount').value),
-    source: document.getElementById('edit-inc-source').value,
-    income_date: document.getElementById('edit-inc-date').value,
-    owner: document.getElementById('edit-inc-owner').value
-  });
-  closeModalForce(); toast('Updated ✓');
-  await loadAllData(); renderDashboard(); renderTransactions();
+  try {
+    await sb.update('income', { id }, {
+      amount: parseFloat(document.getElementById('edit-inc-amount').value),
+      source: document.getElementById('edit-inc-source').value,
+      income_date: document.getElementById('edit-inc-date').value,
+      owner: document.getElementById('edit-inc-owner').value
+    });
+    closeModalForce(); toast('Updated ✓');
+    await loadAllData(); renderDashboard(); renderTransactions();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deleteTx(table, id) {
   if (!confirm('Delete this transaction?')) return;
-  await sb.remove(table, { id });
-  closeModalForce(); toast('Deleted');
-  await loadAllData(); renderDashboard(); renderTransactions();
+  try {
+    await sb.remove(table, { id });
+    closeModalForce(); toast('Deleted');
+    await loadAllData(); renderDashboard(); renderTransactions();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 // ============ GOALS ============
@@ -1128,17 +1328,21 @@ async function saveGoal(id) {
     target_date: document.getElementById('goal-date').value || null
   };
   if (!data.name || !data.target_amount) { toast('Fill in name and target'); return; }
-  if (id) { await sb.update('savings_goals', { id }, data); }
-  else { data.user_id = currentUser.id; await sb.insert('savings_goals', data); }
-  closeModalForce(); toast('Saved ✓');
-  await loadAllData(); renderDashboard();
+  try {
+    if (id) { await sb.update('savings_goals', { id }, data); }
+    else { data.user_id = currentUser.id; await sb.insert('savings_goals', data); }
+    closeModalForce(); toast('Saved ✓');
+    await loadAllData(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deleteGoal(id) {
   if (!confirm('Delete this goal?')) return;
-  await sb.remove('savings_goals', { id });
-  closeModalForce(); toast('Deleted');
-  await loadAllData(); renderDashboard();
+  try {
+    await sb.remove('savings_goals', { id });
+    closeModalForce(); toast('Deleted');
+    await loadAllData(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 // ============ RECURRING ============
@@ -1188,50 +1392,57 @@ async function saveRecurring(id) {
     owner: document.getElementById('rec-owner').value
   };
   if (!data.description || !data.amount) { toast('Fill in description and amount'); return; }
-  if (id) { await sb.update('recurring_expenses', { id }, data); }
-  else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('recurring_expenses', data); }
-  closeModalForce(); toast('Saved ✓');
-  await loadAllData(); renderRecurring();
+  try {
+    if (id) { await sb.update('recurring_expenses', { id }, data); }
+    else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('recurring_expenses', data); }
+    closeModalForce(); toast('Saved ✓');
+    await loadAllData(); renderRecurring();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deleteRecurring(id) {
   if (!confirm('Delete this recurring bill?')) return;
-  await sb.remove('recurring_expenses', { id });
-  closeModalForce(); toast('Deleted');
-  await loadAllData(); renderRecurring();
+  try {
+    await sb.remove('recurring_expenses', { id });
+    closeModalForce(); toast('Deleted');
+    await loadAllData(); renderRecurring();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function toggleRecurring(id, active) {
-  await sb.update('recurring_expenses', { id }, { is_active: active });
-  const r = recurringExpenses.find(r => r.id === id);
-  if (r) r.is_active = active;
-  renderRecurring();
+  try {
+    await sb.update('recurring_expenses', { id }, { is_active: active });
+    const r = recurringExpenses.find(r => r.id === id);
+    if (r) r.is_active = active;
+    renderRecurring();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function generateRecurring() {
-  const ym = monthStr();
-  const active = recurringExpenses.filter(r => r.is_active);
-  let count = 0;
-  for (const r of active) {
-    const date = `${ym}-${String(r.day_of_month).padStart(2,'0')}`;
-    // Check if already generated
-    const existing = expenses.find(e => e.recurring_expense_id === r.id && e.expense_date === date);
-    if (existing) continue;
-    await sb.insert('expenses', {
-      user_id: currentUser.id,
-      amount: r.amount,
-      category_id: r.category_id,
-      payment_method_id: r.payment_method_id || null,
-      description: r.description,
-      owner: r.owner,
-      expense_date: date,
-      recurring_expense_id: r.id
-    });
-    count++;
-  }
-  toast(`Generated ${count} recurring expense(s) ✓`);
-  await loadAllData();
-  renderDashboard();
+  try {
+    const ym = monthStr();
+    const active = recurringExpenses.filter(r => r.is_active);
+    let count = 0;
+    for (const r of active) {
+      const date = `${ym}-${String(r.day_of_month).padStart(2,'0')}`;
+      const existing = expenses.find(e => e.recurring_expense_id === r.id && e.expense_date === date);
+      if (existing) continue;
+      await sb.insert('expenses', {
+        user_id: currentUser.id,
+        amount: r.amount,
+        category_id: r.category_id,
+        payment_method_id: r.payment_method_id || null,
+        description: r.description,
+        owner: r.owner,
+        expense_date: date,
+        recurring_expense_id: r.id
+      });
+      count++;
+    }
+    toast(`Generated ${count} recurring expense(s) ✓`);
+    await loadAllData();
+    renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 // ============ CATEGORIES ============
@@ -1260,17 +1471,21 @@ async function saveCategory(isIncome, id) {
     is_income: isIncome
   };
   if (!data.name) { toast('Enter a name'); return; }
-  if (id) { await sb.update('categories', { id }, data); }
-  else { data.user_id = currentUser.id; await sb.insert('categories', data); }
-  closeModalForce(); toast('Saved ✓');
-  await loadAllData(); renderCategories(); renderDashboard();
+  try {
+    if (id) { await sb.update('categories', { id }, data); }
+    else { data.user_id = currentUser.id; await sb.insert('categories', data); }
+    closeModalForce(); toast('Saved ✓');
+    await loadAllData(); renderCategories(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deleteCategory(id) {
   if (!confirm('Delete this category?')) return;
-  await sb.remove('categories', { id });
-  toast('Deleted');
-  await loadAllData(); renderCategories();
+  try {
+    await sb.remove('categories', { id });
+    toast('Deleted');
+    await loadAllData(); renderCategories();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function seedCategories() {
@@ -1345,7 +1560,7 @@ function renderDebtCard(d) {
 
   return `<div class="debt-card" style="${d.status==='paid_off'?'opacity:.6':''}">
     <div class="debt-card-top">
-      <div><div class="debt-name">${icon} ${d.name}</div><div class="debt-type">${typeLabel} <span class="debt-owner ${d.owner}">${d.owner}</span></div></div>
+      <div><div class="debt-name">${icon} ${esc(d.name)}</div><div class="debt-type">${typeLabel} <span class="debt-owner ${d.owner}">${d.owner}</span></div></div>
       <div style="text-align:right"><div style="font-size:20px;font-weight:800;color:${d.status==='paid_off'?'var(--green)':'var(--red)'}">${d.status==='paid_off'?'PAID ✓':fmt(cur)}</div></div>
     </div>
     <div class="debt-stats">
@@ -1420,17 +1635,21 @@ async function saveDebt(id) {
     owner: document.getElementById('debt-owner').value
   };
   if (!data.name) { toast('Enter a name'); return; }
-  if (id) { await sb.update('debts', { id }, data); }
-  else { data.user_id = currentUser.id; await sb.insert('debts', data); }
-  closeModalForce(); toast('Saved ✓');
-  await loadAllData(); renderDebts(); renderDashboard();
+  try {
+    if (id) { await sb.update('debts', { id }, data); }
+    else { data.user_id = currentUser.id; await sb.insert('debts', data); }
+    closeModalForce(); toast('Saved ✓');
+    await loadAllData(); renderDebts(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deleteDebt(id) {
   if (!confirm('Delete this debt and all its payments?')) return;
-  await sb.remove('debts', { id });
-  closeModalForce(); toast('Deleted');
-  await loadAllData(); renderDebts(); renderDashboard();
+  try {
+    await sb.remove('debts', { id });
+    closeModalForce(); toast('Deleted');
+    await loadAllData(); renderDebts(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 function openUpdateBalanceModal(debtId) {
@@ -1450,9 +1669,11 @@ async function saveUpdatedBalance(debtId) {
   if (isNaN(val) || val < 0) { toast('Enter a valid amount'); return; }
   const upd = { current_balance: val };
   if (val === 0) upd.status = 'paid_off';
-  await sb.update('debts', { id: debtId }, upd);
-  closeModalForce(); toast('Balance updated ✓');
-  await loadAllData(); renderDebts(); renderDashboard();
+  try {
+    await sb.update('debts', { id: debtId }, upd);
+    closeModalForce(); toast('Balance updated ✓');
+    await loadAllData(); renderDebts(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 function openDebtPaymentModal(debtId) {
@@ -1470,23 +1691,24 @@ function openDebtPaymentModal(debtId) {
 async function saveDebtPayment(debtId) {
   const amount = parseFloat(document.getElementById('dp-amount').value);
   if (!amount) { toast('Enter an amount'); return; }
-  await sb.insert('debt_payments', {
-    user_id: currentUser.id,
-    debt_id: debtId,
-    amount,
-    payment_date: document.getElementById('dp-date').value,
-    note: document.getElementById('dp-note').value || null
-  });
-  // Update debt balance
-  const debt = debts.find(d => d.id === debtId);
-  if (debt) {
-    const newBal = Math.max(0, Number(debt.current_balance) - amount);
-    const upd = { current_balance: newBal };
-    if (newBal === 0) upd.status = 'paid_off';
-    await sb.update('debts', { id: debtId }, upd);
-  }
-  closeModalForce(); toast('Payment logged ✓');
-  await loadAllData(); renderDebts(); renderDashboard();
+  try {
+    await sb.insert('debt_payments', {
+      user_id: currentUser.id,
+      debt_id: debtId,
+      amount,
+      payment_date: document.getElementById('dp-date').value,
+      note: document.getElementById('dp-note').value || null
+    });
+    const debt = debts.find(d => d.id === debtId);
+    if (debt) {
+      const newBal = Math.max(0, Number(debt.current_balance) - amount);
+      const upd = { current_balance: newBal };
+      if (newBal === 0) upd.status = 'paid_off';
+      await sb.update('debts', { id: debtId }, upd);
+    }
+    closeModalForce(); toast('Payment logged ✓');
+    await loadAllData(); renderDebts(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 function viewDebtPayments(debtId) {
@@ -1553,23 +1775,29 @@ async function savePaymentMethod(id) {
   };
   if (!data.name) { toast('Enter a name'); return; }
   if (data.last_four && data.last_four.length !== 4) { toast('Last 4 must be exactly 4 digits'); return; }
-  if (id) { await sb.update('payment_methods', { id }, data); }
-  else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('payment_methods', data); }
-  closeModalForce(); toast('Saved ✓');
-  await loadAllData(); renderPaymentMethods();
+  try {
+    if (id) { await sb.update('payment_methods', { id }, data); }
+    else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('payment_methods', data); }
+    closeModalForce(); toast('Saved ✓');
+    await loadAllData(); renderPaymentMethods();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function toggleArchivePM(id, active) {
-  await sb.update('payment_methods', { id }, { is_active: active });
-  closeModalForce(); toast(active ? 'Reactivated ✓' : 'Archived ✓');
-  await loadAllData(); renderPaymentMethods();
+  try {
+    await sb.update('payment_methods', { id }, { is_active: active });
+    closeModalForce(); toast(active ? 'Reactivated ✓' : 'Archived ✓');
+    await loadAllData(); renderPaymentMethods();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function deletePaymentMethod(id) {
   if (!confirm('Delete this payment method?')) return;
-  await sb.remove('payment_methods', { id });
-  closeModalForce(); toast('Deleted');
-  await loadAllData(); renderPaymentMethods();
+  try {
+    await sb.remove('payment_methods', { id });
+    closeModalForce(); toast('Deleted');
+    await loadAllData(); renderPaymentMethods();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function seedPaymentMethods() {
