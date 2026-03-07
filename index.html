@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0a1a">
+<title>Family Budget</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f0a1a;--surface:#1a1230;--surface2:#251d3d;--surface3:#2f2550;
+  --purple:#8b5cf6;--teal:#06b6d4;--pink:#ec4899;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--blue:#3b82f6;
+  --text:#f1f0f5;--text2:#a09bb5;--text3:#6b6580;
+  --glow:0 0 20px rgba(139,92,246,0.3);
+  --radius:14px;--radius-sm:10px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent}
+input,select,textarea,button{font-family:inherit;font-size:inherit}
+button{cursor:pointer;border:none;background:none;color:var(--text)}
+
+/* App Shell */
+#app{height:100%;display:flex;flex-direction:column}
+#auth-screen,#main-screen{height:100%;display:none;flex-direction:column}
+#auth-screen.active,#main-screen.active{display:flex}
+
+/* Auth */
+#auth-screen{justify-content:center;align-items:center;padding:24px;background:linear-gradient(135deg,#0f0a1a 0%,#1a1040 50%,#0a1a2a 100%)}
+.auth-card{width:100%;max-width:380px;text-align:center}
+.auth-logo{font-size:48px;margin-bottom:8px}
+.auth-title{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.auth-sub{color:var(--text2);margin-bottom:32px;font-size:14px}
+.auth-input{width:100%;padding:14px 16px;background:var(--surface2);border:1px solid var(--surface3);border-radius:var(--radius-sm);color:var(--text);font-size:16px;margin-bottom:12px;outline:none;transition:border .2s}
+.auth-input:focus{border-color:var(--purple)}
+.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:var(--radius-sm);color:#fff;font-size:16px;font-weight:700;margin-bottom:12px;transition:opacity .2s}
+.auth-btn:active{opacity:.8}
+.auth-toggle{color:var(--teal);font-size:14px}
+.auth-error{color:var(--red);font-size:13px;margin-bottom:12px;min-height:20px}
+
+/* Header */
+.header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-bottom:1px solid var(--surface2)}
+.header-left{display:flex;align-items:center;gap:10px}
+.header h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-user{font-size:13px;color:var(--text2)}
+.header-actions{display:flex;gap:8px}
+.header-btn{width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px}
+
+/* Content */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px}
+
+/* Tab Bar */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--surface);border-top:1px solid var(--surface2);padding:6px 0 calc(6px + var(--safe-bottom));z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;font-size:10px;color:var(--text3);transition:color .2s}
+.tab.active{color:var(--purple)}
+.tab-icon{font-size:22px}
+.tab.active .tab-icon{filter:drop-shadow(0 0 8px rgba(139,92,246,.5))}
+
+/* Dashboard */
+.dash-summary{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dash-card{background:var(--surface);border-radius:var(--radius);padding:14px;position:relative;overflow:hidden}
+.dash-card.full{grid-column:1/-1}
+.dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.dash-card.income::before{background:linear-gradient(90deg,var(--green),var(--teal))}
+.dash-card.expense::before{background:linear-gradient(90deg,var(--red),var(--orange))}
+.dash-card.net::before{background:linear-gradient(90deg,var(--purple),var(--teal))}
+.dash-card.goals::before{background:linear-gradient(90deg,var(--pink),var(--purple))}
+.dash-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dash-value{font-size:22px;font-weight:800}
+.dash-value.positive{color:var(--green)}
+.dash-value.negative{color:var(--red)}
+
+/* Month Selector */
+.month-sel{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 16px}
+.month-sel button{width:32px;height:32px;border-radius:50%;background:var(--surface2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.month-sel span{font-size:15px;font-weight:600;min-width:140px;text-align:center}
+
+/* Category Budget Bars */
+.budget-bars{padding:0 16px 16px}
+.budget-bar{background:var(--surface);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.budget-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.budget-bar-name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.budget-bar-amt{font-size:13px;color:var(--text2)}
+.budget-track{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.budget-fill{height:100%;border-radius:3px;transition:width .5s ease}
+
+/* Section Headers */
+.section-hdr{padding:16px 16px 8px;display:flex;justify-content:space-between;align-items:center}
+.section-hdr h2{font-size:16px;font-weight:700}
+.section-hdr button{font-size:13px;color:var(--teal)}
+
+/* Goals */
+.goals-list{padding:0 16px 16px}
+.goal-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.goal-name{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}
+.goal-pct{font-size:13px;font-weight:700;color:var(--teal)}
+.goal-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.goal-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--teal));transition:width .5s}
+.goal-bottom{display:flex;justify-content:space-between;font-size:12px;color:var(--text2)}
+
+/* Transaction List */
+.tx-list{padding:0 16px}
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface);border-radius:var(--radius-sm);margin-bottom:6px}
+.tx-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-desc{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{font-size:12px;color:var(--text2);display:flex;gap:6px;align-items:center}
+.tx-owner{font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600}
+.tx-owner.bob{background:rgba(59,130,246,.2);color:var(--blue)}
+.tx-owner.elle{background:rgba(236,72,153,.2);color:var(--pink)}
+.tx-owner.household{background:rgba(139,92,246,.2);color:var(--purple)}
+.tx-amount{font-size:15px;font-weight:700;flex-shrink:0}
+.tx-amount.expense{color:var(--red)}
+.tx-amount.income-amt{color:var(--green)}
+.tx-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tx-tag{font-size:10px;padding:1px 6px;background:var(--surface3);border-radius:4px;color:var(--text2)}
+.tx-empty{text-align:center;padding:40px 16px;color:var(--text3);font-size:14px}
+
+/* Recurring */
+.rec-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface);border-radius:var(--radius-sm);margin-bottom:6px}
+.rec-info{flex:1}
+.rec-desc{font-size:14px;font-weight:600}
+.rec-freq{font-size:12px;color:var(--text2)}
+.rec-amount{font-size:15px;font-weight:700;color:var(--orange)}
+.rec-toggle{width:44px;height:24px;border-radius:12px;background:var(--surface3);position:relative;transition:background .2s}
+.rec-toggle.on{background:var(--green)}
+.rec-toggle::after{content:'';width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s}
+.rec-toggle.on::after{transform:translateX(20px)}
+
+/* Categories */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;padding:0 16px 16px}
+.cat-item{background:var(--surface);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;position:relative}
+.cat-item .cat-icon{font-size:28px;margin-bottom:4px}
+.cat-item .cat-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-item .cat-budget{font-size:10px;color:var(--text2)}
+.cat-actions{position:absolute;top:4px;right:4px;display:flex;gap:2px}
+.cat-actions button{font-size:12px;width:20px;height:20px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center}
+
+/* FAB */
+.fab{position:fixed;bottom:calc(70px + var(--safe-bottom));right:16px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:var(--glow);z-index:99;transition:transform .2s}
+.fab:active{transform:scale(.9)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;justify-content:center;align-items:flex-end}
+.modal-overlay.active{display:flex}
+.modal{width:100%;max-width:500px;max-height:90vh;background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;overflow-y:auto;padding:20px 16px calc(20px + var(--safe-bottom))}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{font-size:24px;color:var(--text3)}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
+.form-input{width:100%;padding:12px;background:var(--surface2);border:1px solid var(--surface3);border-radius:var(--radius-sm);color:var(--text);font-size:16px;outline:none}
+.form-input:focus{border-color:var(--purple)}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a09bb5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.owner-pills{display:flex;gap:8px}
+.owner-pill{flex:1;padding:10px;border-radius:var(--radius-sm);background:var(--surface2);text-align:center;font-size:13px;font-weight:600;border:2px solid transparent;transition:all .2s}
+.owner-pill.active{border-color:var(--purple);background:rgba(139,92,246,.15)}
+.form-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:var(--radius-sm);color:#fff;font-size:16px;font-weight:700;margin-top:8px}
+.form-submit:active{opacity:.8}
+.form-delete{width:100%;padding:12px;color:var(--red);font-size:14px;margin-top:8px;text-align:center}
+.tags-input{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--surface2);border:1px solid var(--surface3);border-radius:var(--radius-sm);min-height:44px;align-items:center}
+.tags-input .tag{font-size:12px;padding:2px 8px;background:var(--purple);color:#fff;border-radius:4px;display:flex;align-items:center;gap:4px}
+.tags-input .tag button{font-size:14px;color:rgba(255,255,255,.7)}
+.tags-input input{border:none;background:none;color:var(--text);outline:none;flex:1;min-width:60px;font-size:14px}
+
+/* Debts */
+.debt-summary{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.debt-summary .dash-card::before{background:linear-gradient(90deg,var(--red),var(--pink))}
+.debt-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.debt-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.debt-name{font-size:15px;font-weight:700}
+.debt-type{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px}
+.debt-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.debt-stat-label{font-size:10px;color:var(--text3);text-transform:uppercase}
+.debt-stat-value{font-size:14px;font-weight:700}
+.debt-progress{margin-bottom:8px}
+.debt-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden}
+.debt-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--teal));transition:width .5s}
+.debt-progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-top:4px}
+.debt-actions{display:flex;gap:8px}
+.debt-actions button{flex:1;padding:8px;border-radius:var(--radius-sm);font-size:13px;font-weight:600}
+.debt-pay-btn{background:var(--green)20;color:var(--green)}
+.debt-edit-btn{background:var(--surface2);color:var(--text2)}
+.debt-owner{font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600}
+.debt-owner.bob{background:rgba(59,130,246,.2);color:var(--blue)}
+.debt-owner.elle{background:rgba(236,72,153,.2);color:var(--pink)}
+.debt-owner.household{background:rgba(139,92,246,.2);color:var(--purple)}
+.debt-payoff{font-size:12px;color:var(--text2);margin-top:6px;text-align:right}
+.debt-payment-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--surface);border-radius:var(--radius-sm);margin-bottom:4px}
+.debt-payment-item .dp-amount{font-weight:700;color:var(--green)}
+.debt-payment-item .dp-date{font-size:12px;color:var(--text2)}
+.debt-payment-item .dp-note{font-size:12px;color:var(--text3)}
+
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+
+/* Loading */
+.loading{display:flex;justify-content:center;padding:40px}
+.spinner{width:32px;height:32px;border:3px solid var(--surface3);border-top-color:var(--purple);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Quick Switcher (expense/income in modal) */
+.type-switch{display:flex;gap:0;margin-bottom:14px;background:var(--surface2);border-radius:var(--radius-sm);overflow:hidden}
+.type-switch button{flex:1;padding:10px;font-size:14px;font-weight:600;transition:all .2s}
+.type-switch button.active{background:var(--purple);color:#fff}
+
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--surface2);border:1px solid var(--purple);border-radius:var(--radius-sm);padding:10px 20px;font-size:14px;z-index:300;transition:transform .3s ease;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Scrollbar */
+.content::-webkit-scrollbar{width:0}
+
+/* Settings */
+.settings-list{padding:0 16px}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface);border-radius:var(--radius-sm);margin-bottom:6px}
+.settings-item span{font-size:14px}
+.settings-item button{color:var(--teal);font-size:14px;font-weight:600}
+
+@media(min-width:600px){
+  .dash-summary{grid-template-columns:repeat(4,1fr)}
+  .dash-card.full{grid-column:span 2}
+  .modal{border-radius:var(--radius);margin-bottom:20px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Auth Screen -->
+  <div id="auth-screen" class="active">
+    <div class="auth-card">
+      <div class="auth-logo">💜</div>
+      <div class="auth-title">Family Budget</div>
+      <div class="auth-sub">Bob & Elle's 2026 Tracker</div>
+      <div id="auth-error" class="auth-error"></div>
+      <input id="auth-email" class="auth-input" type="email" placeholder="Email" autocomplete="email">
+      <input id="auth-pass" class="auth-input" type="password" placeholder="Password" autocomplete="current-password">
+      <input id="auth-name" class="auth-input" type="text" placeholder="Display Name" style="display:none">
+      <button id="auth-submit" class="auth-btn" onclick="handleAuth()">Sign In</button>
+      <button class="auth-toggle" onclick="toggleAuthMode()">Don't have an account? <b>Sign Up</b></button>
+    </div>
+  </div>
+
+  <!-- Main Screen -->
+  <div id="main-screen">
+    <div class="header">
+      <div class="header-left">
+        <h1>💜 Family Budget</h1>
+      </div>
+      <div class="header-actions">
+        <span class="header-user" id="user-name"></span>
+        <button class="header-btn" onclick="signOut()">🚪</button>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <!-- Dashboard -->
+      <div id="page-dashboard" class="page active">
+        <div class="month-sel">
+          <button onclick="changeMonth(-1)">◀</button>
+          <span id="month-label"></span>
+          <button onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="dash-summary">
+          <div class="dash-card income"><div class="dash-label">Income</div><div class="dash-value positive" id="dash-income">$0</div></div>
+          <div class="dash-card expense"><div class="dash-label">Expenses</div><div class="dash-value negative" id="dash-expense">$0</div></div>
+          <div class="dash-card net full"><div class="dash-label">Net Cash Flow</div><div class="dash-value" id="dash-net">$0</div></div>
+          <div class="dash-card full" style="position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--pink))"></div><div class="dash-label">Total Debt</div><div class="dash-value negative" id="dash-debt">$0</div><div style="font-size:11px;color:var(--text3);margin-top:2px" id="dash-debt-extra"></div></div>
+        </div>
+        <div class="section-hdr"><h2>Budget by Category</h2></div>
+        <div class="budget-bars" id="budget-bars"></div>
+        <div class="section-hdr"><h2>Savings Goals</h2><button onclick="openGoalModal()">+ Add</button></div>
+        <div class="goals-list" id="goals-list"></div>
+        <div class="section-hdr"><h2>Spending by Payment Method</h2></div>
+        <div class="budget-bars" id="pm-breakdown"></div>
+        <div class="section-hdr"><h2>Recent Transactions</h2></div>
+        <div class="tx-list" id="recent-tx"></div>
+      </div>
+
+      <!-- Transactions -->
+      <div id="page-transactions" class="page">
+        <div class="month-sel">
+          <button onclick="changeMonth(-1)">◀</button>
+          <span id="month-label2"></span>
+          <button onclick="changeMonth(1)">▶</button>
+        </div>
+        <div style="padding:0 16px 8px;display:flex;gap:8px">
+          <select class="form-input" style="padding:8px;font-size:13px" id="tx-filter-owner" onchange="renderTransactions()">
+            <option value="">All</option><option value="bob">Bob</option><option value="elle">Elle</option><option value="household">Household</option>
+          </select>
+          <select class="form-input" style="padding:8px;font-size:13px" id="tx-filter-type" onchange="renderTransactions()">
+            <option value="">All Types</option><option value="expense">Expenses</option><option value="income">Income</option>
+          </select>
+          <select class="form-input" style="padding:8px;font-size:13px" id="tx-filter-pm" onchange="renderTransactions()">
+            <option value="">All Methods</option>
+          </select>
+        </div>
+        <div class="tx-list" id="all-tx"></div>
+      </div>
+
+      <!-- Recurring -->
+      <div id="page-recurring" class="page">
+        <div class="section-hdr"><h2>Recurring Bills</h2><button onclick="openRecurringModal()">+ Add</button></div>
+        <div class="tx-list" id="recurring-list"></div>
+      </div>
+
+      <!-- Debts -->
+      <div id="page-debts" class="page">
+        <div class="debt-summary" id="debt-summary"></div>
+        <div class="section-hdr"><h2>Debts</h2><button onclick="openDebtModal()">+ Add</button></div>
+        <div class="goals-list" id="debts-list"></div>
+      </div>
+
+      <!-- Categories -->
+      <div id="page-categories" class="page">
+        <div class="section-hdr"><h2>Expense Categories</h2><button onclick="openCategoryModal()">+ Add</button></div>
+        <div class="cat-grid" id="expense-cats"></div>
+        <div class="section-hdr"><h2>Income Categories</h2><button onclick="openCategoryModal(true)">+ Add</button></div>
+        <div class="cat-grid" id="income-cats"></div>
+      </div>
+
+      <!-- Settings -->
+      <div id="page-settings" class="page">
+        <div class="section-hdr"><h2>Settings</h2></div>
+        <div class="settings-list">
+          <div class="settings-item"><span>Seed Default Categories</span><button onclick="seedCategories()">Seed</button></div>
+          <div class="settings-item"><span>Seed Default Payment Methods</span><button onclick="seedPaymentMethods()">Seed</button></div>
+          <div class="settings-item"><span>Generate Recurring for This Month</span><button onclick="generateRecurring()">Generate</button></div>
+          <div class="settings-item"><span>Sign Out</span><button onclick="signOut()">Sign Out</button></div>
+        </div>
+        <div class="section-hdr"><h2>Payment Methods</h2><button onclick="openPaymentMethodModal()">+ Add</button></div>
+        <div class="tx-list" id="pm-list"></div>
+      </div>
+    </div>
+
+    <!-- FAB -->
+    <button class="fab" id="fab" onclick="openAddModal()">+</button>
+
+    <!-- Tab Bar -->
+    <nav class="tab-bar">
+      <button class="tab active" data-page="dashboard"><span class="tab-icon">📊</span>Dashboard</button>
+      <button class="tab" data-page="transactions"><span class="tab-icon">💳</span>History</button>
+      <button class="tab" data-page="recurring"><span class="tab-icon">🔄</span>Recurring</button>
+      <button class="tab" data-page="debts"><span class="tab-icon">💳</span>Debts</button>
+      <button class="tab" data-page="categories"><span class="tab-icon">🏷️</span>Categories</button>
+      <button class="tab" data-page="settings"><span class="tab-icon">⚙️</span>Settings</button>
+    </nav>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Config Modal (first visit) -->
+<script>
+// ============ CONFIG ============
+const STORAGE_KEY = 'family_budget_config';
+let CONFIG = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+
+function showConfigPrompt() {
+  if (CONFIG) return false;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-title">Setup <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Enter your Supabase project credentials. Find them in Project Settings → API.</p>
+    <div class="form-group"><label class="form-label">Supabase URL</label><input class="form-input" id="cfg-url" placeholder="https://xxxxx.supabase.co"></div>
+    <div class="form-group"><label class="form-label">Anon Key</label><input class="form-input" id="cfg-key" placeholder="eyJ..."></div>
+    <button class="form-submit" onclick="saveConfig()">Save & Continue</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('active');
+  return true;
+}
+
+function saveConfig() {
+  const url = document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
+  const key = document.getElementById('cfg-key').value.trim();
+  if (!url || !key) return toast('Please fill in both fields');
+  CONFIG = { url, key };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
+  closeModalForce();
+  initSupabase();
+}
+
+// ============ SUPABASE CLIENT (lightweight) ============
+let sb = null;
+let currentUser = null;
+let subscriptions = [];
+
+class SupabaseClient {
+  constructor(url, key) {
+    this.url = url;
+    this.key = key;
+    this.token = null;
+    this.refreshToken = null;
+  }
+
+  headers() {
+    const h = { 'apikey': this.key, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+    if (this.token) h['Authorization'] = `Bearer ${this.token}`;
+    else h['Authorization'] = `Bearer ${this.key}`;
+    return h;
+  }
+
+  async rpc(fn, params) {
+    const r = await fetch(`${this.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(params) });
+    return r.json();
+  }
+
+  async signUp(email, password, displayName) {
+    const r = await fetch(`${this.url}/auth/v1/signup`, {
+      method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, data: { display_name: displayName } })
+    });
+    const data = await r.json();
+    if (data.error || data.msg) throw new Error(data.error?.message || data.msg || 'Signup failed');
+    if (data.access_token) { this.token = data.access_token; this.refreshToken = data.refresh_token; }
+    return data;
+  }
+
+  async signIn(email, password) {
+    const r = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
+      method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json();
+    if (data.error) throw new Error(data.error_description || data.error);
+    this.token = data.access_token;
+    this.refreshToken = data.refresh_token;
+    return data;
+  }
+
+  async refreshSession() {
+    if (!this.refreshToken) return null;
+    const r = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST', headers: { 'apikey': this.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: this.refreshToken })
+    });
+    const data = await r.json();
+    if (data.access_token) { this.token = data.access_token; this.refreshToken = data.refresh_token; }
+    return data;
+  }
+
+  async getUser() {
+    const r = await fetch(`${this.url}/auth/v1/user`, { headers: { 'apikey': this.key, 'Authorization': `Bearer ${this.token}` } });
+    return r.json();
+  }
+
+  async query(table, { select = '*', filters = '', order = '', limit = 0 } = {}) {
+    let url = `${this.url}/rest/v1/${table}?select=${encodeURIComponent(select)}`;
+    if (filters) url += '&' + filters;
+    if (order) url += '&order=' + order;
+    if (limit) url += '&limit=' + limit;
+    const r = await fetch(url, { headers: this.headers() });
+    return r.json();
+  }
+
+  async insert(table, data) {
+    const r = await fetch(`${this.url}/rest/v1/${table}`, { method: 'POST', headers: this.headers(), body: JSON.stringify(data) });
+    return r.json();
+  }
+
+  async update(table, match, data) {
+    let url = `${this.url}/rest/v1/${table}?`;
+    for (const [k,v] of Object.entries(match)) url += `${k}=eq.${encodeURIComponent(v)}&`;
+    const r = await fetch(url, { method: 'PATCH', headers: this.headers(), body: JSON.stringify(data) });
+    return r.json();
+  }
+
+  async remove(table, match) {
+    let url = `${this.url}/rest/v1/${table}?`;
+    for (const [k,v] of Object.entries(match)) url += `${k}=eq.${encodeURIComponent(v)}&`;
+    const r = await fetch(url, { method: 'DELETE', headers: { ...this.headers(), 'Prefer': 'return=minimal' } });
+    return r.ok;
+  }
+
+}
+
+// ============ STATE ============
+let categories = [];
+let expenses = [];
+let incomeItems = [];
+let recurringExpenses = [];
+let savingsGoals = [];
+let debts = [];
+let debtPayments = [];
+let paymentMethods = [];
+let currentMonth = new Date();
+currentMonth.setDate(1);
+let isSignUp = false;
+
+// ============ INIT ============
+function initSupabase() {
+  if (!CONFIG) { showConfigPrompt(); return; }
+  sb = new SupabaseClient(CONFIG.url, CONFIG.key);
+  
+  // Check for saved session
+  const saved = localStorage.getItem('fb_session');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      sb.token = s.token;
+      sb.refreshToken = s.refreshToken;
+      currentUser = s.user;
+      sb.refreshSession().then(d => {
+        if (d?.access_token) {
+          sb.token = d.access_token;
+          saveSession();
+          showMain();
+        } else {
+          showAuth();
+        }
+      }).catch(() => showAuth());
+    } catch(e) { showAuth(); }
+  } else {
+    showAuth();
+  }
+}
+
+function saveSession() {
+  localStorage.setItem('fb_session', JSON.stringify({ token: sb.token, refreshToken: sb.refreshToken, user: currentUser }));
+}
+
+function showAuth() {
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('main-screen').classList.remove('active');
+}
+
+async function showMain() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('main-screen').classList.add('active');
+  document.getElementById('user-name').textContent = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || '';
+  await loadAllData();
+  renderDashboard();
+}
+
+// ============ AUTH ============
+function toggleAuthMode() {
+  isSignUp = !isSignUp;
+  document.getElementById('auth-name').style.display = isSignUp ? '' : 'none';
+  document.getElementById('auth-submit').textContent = isSignUp ? 'Sign Up' : 'Sign In';
+  document.querySelector('.auth-toggle').innerHTML = isSignUp 
+    ? 'Already have an account? <b>Sign In</b>' 
+    : "Don't have an account? <b>Sign Up</b>";
+  document.getElementById('auth-error').textContent = '';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass = document.getElementById('auth-pass').value;
+  const name = document.getElementById('auth-name').value.trim();
+  const errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Please fill in all fields'; return; }
+  try {
+    let data;
+    if (isSignUp) {
+      data = await sb.signUp(email, pass, name || email.split('@')[0]);
+      if (!data.access_token && data.id) { errEl.textContent = 'Check your email for confirmation link!'; return; }
+    } else {
+      data = await sb.signIn(email, pass);
+    }
+    currentUser = data.user;
+    saveSession();
+    showMain();
+  } catch(e) { errEl.textContent = e.message; }
+}
+
+function signOut() {
+  localStorage.removeItem('fb_session');
+  currentUser = null;
+  if (sb) { sb.token = null; sb.refreshToken = null; }
+  showAuth();
+}
+
+// ============ DATA ============
+async function loadAllData() {
+  const ym = monthStr();
+  const [cats, exp, inc, rec, goals, dts, dpay, pmethods] = await Promise.all([
+    sb.query('categories', { order: 'sort_order.asc' }),
+    sb.query('expenses', { filters: `expense_date=gte.${ym}-01&expense_date=lte.${ym}-31`, order: 'expense_date.desc,created_at.desc' }),
+    sb.query('income', { filters: `income_date=gte.${ym}-01&income_date=lte.${ym}-31`, order: 'income_date.desc,created_at.desc' }),
+    sb.query('recurring_expenses', { order: 'description.asc' }),
+    sb.query('savings_goals', { order: 'created_at.asc' }),
+    sb.query('debts', { order: 'created_at.asc' }),
+    sb.query('debt_payments', { order: 'payment_date.desc,created_at.desc' }),
+    sb.query('payment_methods', { order: 'sort_order.asc,name.asc' })
+  ]);
+  categories = Array.isArray(cats) ? cats : [];
+  expenses = Array.isArray(exp) ? exp : [];
+  incomeItems = Array.isArray(inc) ? inc : [];
+  recurringExpenses = Array.isArray(rec) ? rec : [];
+  savingsGoals = Array.isArray(goals) ? goals : [];
+  debts = Array.isArray(dts) ? dts : [];
+  debtPayments = Array.isArray(dpay) ? dpay : [];
+  paymentMethods = Array.isArray(pmethods) ? pmethods : [];
+}
+
+function monthStr() {
+  return `${currentMonth.getFullYear()}-${String(currentMonth.getMonth()+1).padStart(2,'0')}`;
+}
+
+function monthLabel() {
+  return currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+function changeMonth(d) {
+  currentMonth.setMonth(currentMonth.getMonth() + d);
+  loadAllData().then(() => { renderDashboard(); renderTransactions(); });
+}
+
+function fmt(n) { return '$' + Number(n||0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+// ============ RENDER ============
+function renderDashboard() {
+  document.getElementById('month-label').textContent = monthLabel();
+  document.getElementById('month-label2').textContent = monthLabel();
+  
+  const totalIncome = incomeItems.reduce((s,i) => s + Number(i.amount), 0);
+  const totalExpense = expenses.reduce((s,i) => s + Number(i.amount), 0);
+  const net = totalIncome - totalExpense;
+  
+  document.getElementById('dash-income').textContent = fmt(totalIncome);
+  document.getElementById('dash-expense').textContent = fmt(totalExpense);
+  const netEl = document.getElementById('dash-net');
+  netEl.textContent = fmt(net);
+  netEl.className = 'dash-value ' + (net >= 0 ? 'positive' : 'negative');
+  
+  // Budget bars
+  const expCats = categories.filter(c => !c.is_income);
+  const barsHtml = expCats.map(cat => {
+    const spent = expenses.filter(e => e.category_id === cat.id).reduce((s,e) => s + Number(e.amount), 0);
+    const limit = Number(cat.budget_limit) || 0;
+    const pct = limit > 0 ? Math.min((spent/limit)*100, 100) : 0;
+    const color = pct > 90 ? 'var(--red)' : pct > 70 ? 'var(--orange)' : (cat.color || 'var(--purple)');
+    if (spent === 0 && limit === 0) return '';
+    return `<div class="budget-bar">
+      <div class="budget-bar-top">
+        <span class="budget-bar-name">${cat.icon} ${cat.name}</span>
+        <span class="budget-bar-amt">${fmt(spent)}${limit ? ' / ' + fmt(limit) : ''}</span>
+      </div>
+      ${limit ? `<div class="budget-track"><div class="budget-fill" style="width:${pct}%;background:${color}"></div></div>` : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('budget-bars').innerHTML = barsHtml || '<div class="tx-empty">No expenses this month</div>';
+  
+  // Goals
+  const goalsHtml = savingsGoals.map(g => {
+    const pct = Math.min((Number(g.current_amount)/Number(g.target_amount))*100, 100);
+    return `<div class="goal-card" onclick="openGoalModal('${g.id}')">
+      <div class="goal-top"><span class="goal-name">${g.icon} ${g.name}</span><span class="goal-pct">${pct.toFixed(0)}%</span></div>
+      <div class="goal-track"><div class="goal-fill" style="width:${pct}%"></div></div>
+      <div class="goal-bottom"><span>${fmt(g.current_amount)}</span><span>${fmt(g.target_amount)}</span></div>
+    </div>`;
+  }).join('');
+  document.getElementById('goals-list').innerHTML = goalsHtml || '<div class="tx-empty">No savings goals yet</div>';
+  
+  // Debt dashboard
+  const activeDebts = debts.filter(d => d.status === 'active');
+  const totalDebt = activeDebts.reduce((s,d) => s + Number(d.current_balance), 0);
+  const totalMinPayments = activeDebts.reduce((s,d) => s + Number(d.minimum_payment||0), 0);
+  document.getElementById('dash-debt').textContent = fmt(totalDebt);
+  const dti = totalIncome > 0 ? ((totalMinPayments / totalIncome) * 100).toFixed(0) : '—';
+  document.getElementById('dash-debt-extra').textContent = `${activeDebts.length} active · Min payments: ${fmt(totalMinPayments)}/mo · DTI: ${dti}%`;
+  
+  // Spending by payment method
+  const pmGroups = {};
+  expenses.forEach(e => {
+    const pmId = e.payment_method_id || '_none';
+    pmGroups[pmId] = (pmGroups[pmId] || 0) + Number(e.amount);
+  });
+  const pmBreakdownHtml = Object.entries(pmGroups).sort((a,b) => b[1]-a[1]).map(([pmId, total]) => {
+    const pm = paymentMethods.find(p => p.id === pmId);
+    const name = pm ? `${PM_TYPE_ICONS[pm.type]||'💳'} ${pm.name}${pm.last_four?' ···'+pm.last_four:''}` : '— Unassigned';
+    const pct = totalExpense > 0 ? (total/totalExpense)*100 : 0;
+    return `<div class="budget-bar"><div class="budget-bar-top"><span class="budget-bar-name">${name}</span><span class="budget-bar-amt">${fmt(total)} (${pct.toFixed(0)}%)</span></div><div class="budget-track"><div class="budget-fill" style="width:${pct}%;background:var(--teal)"></div></div></div>`;
+  }).join('');
+  document.getElementById('pm-breakdown').innerHTML = pmBreakdownHtml || '<div class="tx-empty">No expenses this month</div>';
+
+  // Recent transactions
+  const all = [
+    ...expenses.map(e => ({ ...e, _type: 'expense' })),
+    ...incomeItems.map(i => ({ ...i, _type: 'income', expense_date: i.income_date }))
+  ].sort((a,b) => (b.expense_date || b.income_date || '').localeCompare(a.expense_date || a.income_date || '')).slice(0, 10);
+  renderTxList(all, 'recent-tx');
+}
+
+function renderTransactions() {
+  document.getElementById('month-label2').textContent = monthLabel();
+  const ownerFilter = document.getElementById('tx-filter-owner').value;
+  const typeFilter = document.getElementById('tx-filter-type').value;
+  const pmFilter = document.getElementById('tx-filter-pm').value;
+  
+  // Populate PM filter dropdown
+  const pmSel = document.getElementById('tx-filter-pm');
+  const curPmVal = pmSel.value;
+  pmSel.innerHTML = '<option value="">All Methods</option>' + paymentMethods.map(p => `<option value="${p.id}" ${p.id===curPmVal?'selected':''}>${PM_TYPE_ICONS[p.type]||'💳'} ${p.name}</option>`).join('');
+  
+  let all = [];
+  if (typeFilter !== 'income') all.push(...expenses.map(e => ({ ...e, _type: 'expense' })));
+  if (typeFilter !== 'expense') all.push(...incomeItems.map(i => ({ ...i, _type: 'income', expense_date: i.income_date })));
+  if (ownerFilter) all = all.filter(t => t.owner === ownerFilter);
+  if (pmFilter) all = all.filter(t => t.payment_method_id === pmFilter);
+  all.sort((a,b) => (b.expense_date||'').localeCompare(a.expense_date||''));
+  renderTxList(all, 'all-tx');
+}
+
+function renderTxList(items, containerId) {
+  if (!items.length) {
+    document.getElementById(containerId).innerHTML = '<div class="tx-empty">No transactions</div>';
+    return;
+  }
+  const html = items.map(t => {
+    const cat = categories.find(c => c.id === t.category_id);
+    const isIncome = t._type === 'income';
+    const icon = cat?.icon || (isIncome ? '💵' : '📦');
+    const bgColor = cat?.color || (isIncome ? 'var(--green)' : 'var(--purple)');
+    const tags = (t.tags || []).map(tag => `<span class="tx-tag">${tag}</span>`).join('');
+    return `<div class="tx-item" onclick="openEditTx('${t._type}','${t.id}')">
+      <div class="tx-icon" style="background:${bgColor}20">${icon}</div>
+      <div class="tx-info">
+        <div class="tx-desc">${t.description || t.source || cat?.name || 'Transaction'}</div>
+        <div class="tx-meta">
+          <span class="tx-owner ${t.owner}">${t.owner}</span>
+          <span>${t.expense_date || t.income_date || ''}</span>
+          ${t.payment_method_id ? `<span style="font-size:10px;color:var(--teal)">${pmName(t.payment_method_id)}</span>` : ''}
+        </div>
+        ${tags ? `<div class="tx-tags">${tags}</div>` : ''}
+      </div>
+      <div class="tx-amount ${isIncome ? 'income-amt' : 'expense'}">${isIncome ? '+' : '-'}${fmt(t.amount)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function renderRecurring() {
+  const html = recurringExpenses.map(r => {
+    const cat = categories.find(c => c.id === r.category_id);
+    return `<div class="rec-item" onclick="openRecurringModal('${r.id}')">
+      <div class="tx-icon" style="background:${cat?.color||'var(--purple)'}20">${cat?.icon||'🔄'}</div>
+      <div class="rec-info">
+        <div class="rec-desc">${r.description}</div>
+        <div class="rec-freq">${r.frequency} · Day ${r.day_of_month} · <span class="tx-owner ${r.owner}">${r.owner}</span></div>
+      </div>
+      <div class="rec-amount">${fmt(r.amount)}</div>
+      <div class="rec-toggle ${r.is_active?'on':''}" onclick="event.stopPropagation();toggleRecurring('${r.id}',${!r.is_active})"></div>
+    </div>`;
+  }).join('');
+  document.getElementById('recurring-list').innerHTML = html || '<div class="tx-empty">No recurring bills</div>';
+}
+
+function renderCategories() {
+  const render = (cats, container) => {
+    document.getElementById(container).innerHTML = cats.map(c => `
+      <div class="cat-item" style="border-left:3px solid ${c.color}">
+        <div class="cat-actions">
+          <button onclick="openCategoryModal(${c.is_income},'${c.id}')">✏️</button>
+          <button onclick="deleteCategory('${c.id}')">🗑</button>
+        </div>
+        <div class="cat-icon">${c.icon}</div>
+        <div class="cat-name">${c.name}</div>
+        ${c.budget_limit ? `<div class="cat-budget">${fmt(c.budget_limit)}/mo</div>` : ''}
+      </div>
+    `).join('') || '<div class="tx-empty" style="grid-column:1/-1">No categories</div>';
+  };
+  render(categories.filter(c => !c.is_income), 'expense-cats');
+  render(categories.filter(c => c.is_income), 'income-cats');
+}
+
+// ============ TABS ============
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const page = tab.dataset.page;
+    document.getElementById('page-' + page).classList.add('active');
+    document.getElementById('content').scrollTop = 0;
+    if (page === 'transactions') renderTransactions();
+    if (page === 'recurring') renderRecurring();
+    if (page === 'debts') renderDebts();
+    if (page === 'categories') renderCategories();
+    if (page === 'settings') renderPaymentMethods();
+  });
+});
+
+// ============ MODALS ============
+function openModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+function closeModal(e) { if (e.target === e.currentTarget) closeModalForce(); }
+function closeModalForce() { document.getElementById('modal-overlay').classList.remove('active'); }
+
+function catOptions(isIncome, selectedId) {
+  return categories.filter(c => c.is_income === !!isIncome).map(c => 
+    `<option value="${c.id}" ${c.id===selectedId?'selected':''}>${c.icon} ${c.name}</option>`
+  ).join('');
+}
+
+const PM_TYPE_LABELS = {credit_card:'Credit Card',debit_card:'Debit Card',cash:'Cash',digital_wallet:'Digital Wallet',bank_transfer:'Bank Transfer'};
+const PM_TYPE_ICONS = {credit_card:'💳',debit_card:'💳',cash:'💵',digital_wallet:'📱',bank_transfer:'🏦'};
+
+function pmOptions(selectedId) {
+  return '<option value="">— None —</option>' + paymentMethods.filter(p => p.is_active).map(p =>
+    `<option value="${p.id}" ${p.id===selectedId?'selected':''}>${PM_TYPE_ICONS[p.type]||'💳'} ${p.name}${p.last_four?' ···'+p.last_four:''}</option>`
+  ).join('');
+}
+
+function pmName(id) {
+  const p = paymentMethods.find(m => m.id === id);
+  if (!p) return '';
+  return `${PM_TYPE_ICONS[p.type]||'💳'} ${p.name}${p.last_four?' ···'+p.last_four:''}`;
+}
+
+function openAddModal() {
+  let txType = 'expense';
+  const html = `
+    <div class="modal-title">Add Transaction <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="type-switch">
+      <button class="active" id="ts-expense" onclick="switchTxType('expense')">💳 Expense</button>
+      <button id="ts-income" onclick="switchTxType('income')">💵 Income</button>
+    </div>
+    <div id="tx-form-expense">
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="add-amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="add-cat">${catOptions(false)}</select></div>
+      <div class="form-group"><label class="form-label">Payment Method</label><select class="form-input" id="add-pm">${pmOptions()}</select></div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="add-desc" placeholder="What was it for?"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="add-date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-group"><label class="form-label">Owner</label>
+          <div class="owner-pills">
+            <div class="owner-pill active" onclick="pickOwner(this,'add-owner')" data-val="household">🏠</div>
+            <div class="owner-pill" onclick="pickOwner(this,'add-owner')" data-val="bob">👨</div>
+            <div class="owner-pill" onclick="pickOwner(this,'add-owner')" data-val="elle">👩</div>
+          </div>
+          <input type="hidden" id="add-owner" value="household">
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Tags (press Enter)</label><div class="tags-input" id="add-tags-wrap"><input placeholder="Add tag..." onkeydown="handleTagKey(event,'add-tags')"></div><input type="hidden" id="add-tags" value=""></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="add-notes" rows="2" placeholder="Optional notes..."></textarea></div>
+    </div>
+    <div id="tx-form-income" style="display:none">
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="add-inc-amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+      <div class="form-group"><label class="form-label">Source</label><input class="form-input" id="add-inc-source" placeholder="e.g. Paycheck, Freelance"></div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="add-inc-desc" placeholder="Details..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="add-inc-date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-group"><label class="form-label">Owner</label>
+          <div class="owner-pills">
+            <div class="owner-pill active" onclick="pickOwner(this,'add-inc-owner')" data-val="household">🏠</div>
+            <div class="owner-pill" onclick="pickOwner(this,'add-inc-owner')" data-val="bob">👨</div>
+            <div class="owner-pill" onclick="pickOwner(this,'add-inc-owner')" data-val="elle">👩</div>
+          </div>
+          <input type="hidden" id="add-inc-owner" value="household">
+        </div>
+      </div>
+    </div>
+    <button class="form-submit" onclick="saveTransaction()">Save</button>
+  `;
+  openModal(html);
+  // Focus amount
+  setTimeout(() => document.getElementById('add-amount')?.focus(), 300);
+}
+
+let currentTxType = 'expense';
+function switchTxType(type) {
+  currentTxType = type;
+  document.getElementById('tx-form-expense').style.display = type === 'expense' ? '' : 'none';
+  document.getElementById('tx-form-income').style.display = type === 'income' ? '' : 'none';
+  document.getElementById('ts-expense').classList.toggle('active', type === 'expense');
+  document.getElementById('ts-income').classList.toggle('active', type === 'income');
+}
+
+function pickOwner(el, inputId) {
+  el.parentElement.querySelectorAll('.owner-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(inputId).value = el.dataset.val;
+}
+
+function handleTagKey(e, inputId) {
+  if (e.key !== 'Enter' && e.key !== ',') return;
+  e.preventDefault();
+  const val = e.target.value.trim().replace(',','');
+  if (!val) return;
+  const hidden = document.getElementById(inputId);
+  const tags = hidden.value ? hidden.value.split(',') : [];
+  if (tags.includes(val)) return;
+  tags.push(val);
+  hidden.value = tags.join(',');
+  const tag = document.createElement('span');
+  tag.className = 'tag';
+  tag.innerHTML = `${val}<button onclick="removeTag(this,'${inputId}')">&times;</button>`;
+  e.target.parentElement.insertBefore(tag, e.target);
+  e.target.value = '';
+}
+
+function removeTag(btn, inputId) {
+  const text = btn.parentElement.textContent.slice(0, -1);
+  const hidden = document.getElementById(inputId);
+  hidden.value = hidden.value.split(',').filter(t => t !== text).join(',');
+  btn.parentElement.remove();
+}
+
+async function saveTransaction() {
+  try {
+    if (currentTxType === 'expense') {
+      const amount = parseFloat(document.getElementById('add-amount').value);
+      if (!amount) { toast('Enter an amount'); return; }
+      const data = {
+        user_id: currentUser.id,
+        amount,
+        category_id: document.getElementById('add-cat').value || null,
+        payment_method_id: document.getElementById('add-pm').value || null,
+        description: document.getElementById('add-desc').value,
+        expense_date: document.getElementById('add-date').value,
+        owner: document.getElementById('add-owner').value,
+        notes: document.getElementById('add-notes').value,
+        tags: document.getElementById('add-tags').value ? document.getElementById('add-tags').value.split(',') : []
+      };
+      await sb.insert('expenses', data);
+    } else {
+      const amount = parseFloat(document.getElementById('add-inc-amount').value);
+      if (!amount) { toast('Enter an amount'); return; }
+      await sb.insert('income', {
+        user_id: currentUser.id,
+        amount,
+        source: document.getElementById('add-inc-source').value,
+        description: document.getElementById('add-inc-desc').value,
+        income_date: document.getElementById('add-inc-date').value,
+        owner: document.getElementById('add-inc-owner').value
+      });
+    }
+    closeModalForce();
+    toast('Saved! ✓');
+    await loadAllData();
+    renderDashboard();
+    renderTransactions();
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+function openEditTx(type, id) {
+  const item = type === 'expense' ? expenses.find(e => e.id === id) : incomeItems.find(i => i.id === id);
+  if (!item) return;
+  
+  if (type === 'expense') {
+    const tags = (item.tags || []).map(t => `<span class="tag">${t}<button onclick="removeTag(this,'edit-tags')">&times;</button></span>`).join('');
+    openModal(`
+      <div class="modal-title">Edit Expense <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="edit-amount" type="number" step="0.01" value="${item.amount}"></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="edit-cat">${catOptions(false, item.category_id)}</select></div>
+      <div class="form-group"><label class="form-label">Payment Method</label><select class="form-input" id="edit-pm">${pmOptions(item.payment_method_id)}</select></div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="edit-desc" value="${item.description||''}"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="edit-date" type="date" value="${item.expense_date}"></div>
+        <div class="form-group"><label class="form-label">Owner</label>
+          <div class="owner-pills">
+            <div class="owner-pill ${item.owner==='household'?'active':''}" onclick="pickOwner(this,'edit-owner')" data-val="household">🏠</div>
+            <div class="owner-pill ${item.owner==='bob'?'active':''}" onclick="pickOwner(this,'edit-owner')" data-val="bob">👨</div>
+            <div class="owner-pill ${item.owner==='elle'?'active':''}" onclick="pickOwner(this,'edit-owner')" data-val="elle">👩</div>
+          </div>
+          <input type="hidden" id="edit-owner" value="${item.owner}">
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Tags</label><div class="tags-input" id="edit-tags-wrap">${tags}<input placeholder="Add tag..." onkeydown="handleTagKey(event,'edit-tags')"></div><input type="hidden" id="edit-tags" value="${(item.tags||[]).join(',')}"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="edit-notes" rows="2">${item.notes||''}</textarea></div>
+      <button class="form-submit" onclick="updateExpense('${id}')">Update</button>
+      <button class="form-delete" onclick="deleteTx('expenses','${id}')">Delete Expense</button>
+    `);
+  } else {
+    openModal(`
+      <div class="modal-title">Edit Income <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="edit-inc-amount" type="number" step="0.01" value="${item.amount}"></div>
+      <div class="form-group"><label class="form-label">Source</label><input class="form-input" id="edit-inc-source" value="${item.source||''}"></div>
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="edit-inc-date" type="date" value="${item.income_date}"></div>
+      <div class="form-group"><label class="form-label">Owner</label>
+        <div class="owner-pills">
+          <div class="owner-pill ${item.owner==='household'?'active':''}" onclick="pickOwner(this,'edit-inc-owner')" data-val="household">🏠</div>
+          <div class="owner-pill ${item.owner==='bob'?'active':''}" onclick="pickOwner(this,'edit-inc-owner')" data-val="bob">👨</div>
+          <div class="owner-pill ${item.owner==='elle'?'active':''}" onclick="pickOwner(this,'edit-inc-owner')" data-val="elle">👩</div>
+        </div>
+        <input type="hidden" id="edit-inc-owner" value="${item.owner}">
+      </div>
+      <button class="form-submit" onclick="updateIncome('${id}')">Update</button>
+      <button class="form-delete" onclick="deleteTx('income','${id}')">Delete Income</button>
+    `);
+  }
+}
+
+async function updateExpense(id) {
+  await sb.update('expenses', { id }, {
+    amount: parseFloat(document.getElementById('edit-amount').value),
+    category_id: document.getElementById('edit-cat').value || null,
+    payment_method_id: document.getElementById('edit-pm').value || null,
+    description: document.getElementById('edit-desc').value,
+    expense_date: document.getElementById('edit-date').value,
+    owner: document.getElementById('edit-owner').value,
+    notes: document.getElementById('edit-notes').value,
+    tags: document.getElementById('edit-tags').value ? document.getElementById('edit-tags').value.split(',') : []
+  });
+  closeModalForce(); toast('Updated ✓');
+  await loadAllData(); renderDashboard(); renderTransactions();
+}
+
+async function updateIncome(id) {
+  await sb.update('income', { id }, {
+    amount: parseFloat(document.getElementById('edit-inc-amount').value),
+    source: document.getElementById('edit-inc-source').value,
+    income_date: document.getElementById('edit-inc-date').value,
+    owner: document.getElementById('edit-inc-owner').value
+  });
+  closeModalForce(); toast('Updated ✓');
+  await loadAllData(); renderDashboard(); renderTransactions();
+}
+
+async function deleteTx(table, id) {
+  if (!confirm('Delete this transaction?')) return;
+  await sb.remove(table, { id });
+  closeModalForce(); toast('Deleted');
+  await loadAllData(); renderDashboard(); renderTransactions();
+}
+
+// ============ GOALS ============
+function openGoalModal(id) {
+  const goal = id ? savingsGoals.find(g => g.id === id) : null;
+  openModal(`
+    <div class="modal-title">${goal ? 'Edit' : 'New'} Savings Goal <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="goal-name" value="${goal?.name||''}"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Icon</label><input class="form-input" id="goal-icon" value="${goal?.icon||'🎯'}" maxlength="4"></div>
+      <div class="form-group"><label class="form-label">Target Date</label><input class="form-input" id="goal-date" type="date" value="${goal?.target_date||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Target Amount</label><input class="form-input" id="goal-target" type="number" step="0.01" value="${goal?.target_amount||''}"></div>
+      <div class="form-group"><label class="form-label">Current Amount</label><input class="form-input" id="goal-current" type="number" step="0.01" value="${goal?.current_amount||0}"></div>
+    </div>
+    <button class="form-submit" onclick="saveGoal('${id||''}')">${goal ? 'Update' : 'Create'} Goal</button>
+    ${goal ? `<button class="form-delete" onclick="deleteGoal('${id}')">Delete Goal</button>` : ''}
+  `);
+}
+
+async function saveGoal(id) {
+  const data = {
+    name: document.getElementById('goal-name').value,
+    icon: document.getElementById('goal-icon').value || '🎯',
+    target_amount: parseFloat(document.getElementById('goal-target').value),
+    current_amount: parseFloat(document.getElementById('goal-current').value) || 0,
+    target_date: document.getElementById('goal-date').value || null
+  };
+  if (!data.name || !data.target_amount) { toast('Fill in name and target'); return; }
+  if (id) { await sb.update('savings_goals', { id }, data); }
+  else { data.user_id = currentUser.id; await sb.insert('savings_goals', data); }
+  closeModalForce(); toast('Saved ✓');
+  await loadAllData(); renderDashboard();
+}
+
+async function deleteGoal(id) {
+  if (!confirm('Delete this goal?')) return;
+  await sb.remove('savings_goals', { id });
+  closeModalForce(); toast('Deleted');
+  await loadAllData(); renderDashboard();
+}
+
+// ============ RECURRING ============
+function openRecurringModal(id) {
+  const rec = id ? recurringExpenses.find(r => r.id === id) : null;
+  openModal(`
+    <div class="modal-title">${rec ? 'Edit' : 'New'} Recurring Bill <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="rec-desc" value="${rec?.description||''}"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="rec-amount" type="number" step="0.01" value="${rec?.amount||''}"></div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-input" id="rec-cat">${catOptions(false, rec?.category_id)}</select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Payment Method</label><select class="form-input" id="rec-pm">${pmOptions(rec?.payment_method_id)}</select></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Frequency</label>
+        <select class="form-input" id="rec-freq">
+          <option value="weekly" ${rec?.frequency==='weekly'?'selected':''}>Weekly</option>
+          <option value="biweekly" ${rec?.frequency==='biweekly'?'selected':''}>Bi-weekly</option>
+          <option value="monthly" ${!rec||rec?.frequency==='monthly'?'selected':''}>Monthly</option>
+          <option value="quarterly" ${rec?.frequency==='quarterly'?'selected':''}>Quarterly</option>
+          <option value="yearly" ${rec?.frequency==='yearly'?'selected':''}>Yearly</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Day of Month</label><input class="form-input" id="rec-day" type="number" min="1" max="31" value="${rec?.day_of_month||1}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Owner</label>
+      <div class="owner-pills">
+        <div class="owner-pill ${(!rec||rec.owner==='household')?'active':''}" onclick="pickOwner(this,'rec-owner')" data-val="household">🏠</div>
+        <div class="owner-pill ${rec?.owner==='bob'?'active':''}" onclick="pickOwner(this,'rec-owner')" data-val="bob">👨</div>
+        <div class="owner-pill ${rec?.owner==='elle'?'active':''}" onclick="pickOwner(this,'rec-owner')" data-val="elle">👩</div>
+      </div>
+      <input type="hidden" id="rec-owner" value="${rec?.owner||'household'}">
+    </div>
+    <button class="form-submit" onclick="saveRecurring('${id||''}')">${rec ? 'Update' : 'Create'}</button>
+    ${rec ? `<button class="form-delete" onclick="deleteRecurring('${id}')">Delete</button>` : ''}
+  `);
+}
+
+async function saveRecurring(id) {
+  const data = {
+    description: document.getElementById('rec-desc').value,
+    amount: parseFloat(document.getElementById('rec-amount').value),
+    category_id: document.getElementById('rec-cat').value || null,
+    payment_method_id: document.getElementById('rec-pm').value || null,
+    frequency: document.getElementById('rec-freq').value,
+    day_of_month: parseInt(document.getElementById('rec-day').value) || 1,
+    owner: document.getElementById('rec-owner').value
+  };
+  if (!data.description || !data.amount) { toast('Fill in description and amount'); return; }
+  if (id) { await sb.update('recurring_expenses', { id }, data); }
+  else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('recurring_expenses', data); }
+  closeModalForce(); toast('Saved ✓');
+  await loadAllData(); renderRecurring();
+}
+
+async function deleteRecurring(id) {
+  if (!confirm('Delete this recurring bill?')) return;
+  await sb.remove('recurring_expenses', { id });
+  closeModalForce(); toast('Deleted');
+  await loadAllData(); renderRecurring();
+}
+
+async function toggleRecurring(id, active) {
+  await sb.update('recurring_expenses', { id }, { is_active: active });
+  const r = recurringExpenses.find(r => r.id === id);
+  if (r) r.is_active = active;
+  renderRecurring();
+}
+
+async function generateRecurring() {
+  const ym = monthStr();
+  const active = recurringExpenses.filter(r => r.is_active);
+  let count = 0;
+  for (const r of active) {
+    const date = `${ym}-${String(r.day_of_month).padStart(2,'0')}`;
+    // Check if already generated
+    const existing = expenses.find(e => e.recurring_expense_id === r.id && e.expense_date === date);
+    if (existing) continue;
+    await sb.insert('expenses', {
+      user_id: currentUser.id,
+      amount: r.amount,
+      category_id: r.category_id,
+      payment_method_id: r.payment_method_id || null,
+      description: r.description,
+      owner: r.owner,
+      expense_date: date,
+      recurring_expense_id: r.id
+    });
+    count++;
+  }
+  toast(`Generated ${count} recurring expense(s) ✓`);
+  await loadAllData();
+  renderDashboard();
+}
+
+// ============ CATEGORIES ============
+function openCategoryModal(isIncome, id) {
+  const cat = id ? categories.find(c => c.id === id) : null;
+  openModal(`
+    <div class="modal-title">${cat ? 'Edit' : 'New'} ${isIncome ? 'Income' : 'Expense'} Category <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Icon</label><input class="form-input" id="cat-icon" value="${cat?.icon||'📦'}" maxlength="4"></div>
+      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="cat-name" value="${cat?.name||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Color</label><input class="form-input" id="cat-color" type="color" value="${cat?.color||'#8b5cf6'}"></div>
+      <div class="form-group"><label class="form-label">Budget Limit/mo</label><input class="form-input" id="cat-budget" type="number" step="0.01" value="${cat?.budget_limit||''}" placeholder="Optional"></div>
+    </div>
+    <button class="form-submit" onclick="saveCategory(${!!isIncome},'${id||''}')">${cat ? 'Update' : 'Create'}</button>
+  `);
+}
+
+async function saveCategory(isIncome, id) {
+  const data = {
+    icon: document.getElementById('cat-icon').value || '📦',
+    name: document.getElementById('cat-name').value,
+    color: document.getElementById('cat-color').value,
+    budget_limit: parseFloat(document.getElementById('cat-budget').value) || null,
+    is_income: isIncome
+  };
+  if (!data.name) { toast('Enter a name'); return; }
+  if (id) { await sb.update('categories', { id }, data); }
+  else { data.user_id = currentUser.id; await sb.insert('categories', data); }
+  closeModalForce(); toast('Saved ✓');
+  await loadAllData(); renderCategories(); renderDashboard();
+}
+
+async function deleteCategory(id) {
+  if (!confirm('Delete this category?')) return;
+  await sb.remove('categories', { id });
+  toast('Deleted');
+  await loadAllData(); renderCategories();
+}
+
+async function seedCategories() {
+  if (!confirm('Add default categories?')) return;
+  try {
+    await sb.rpc('seed_default_categories', { p_user_id: currentUser.id });
+    toast('Categories seeded ✓');
+    await loadAllData(); renderCategories(); renderDashboard();
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+// ============ DEBTS ============
+const DEBT_TYPE_LABELS = {credit_card:'Credit Card',auto_loan:'Auto Loan',mortgage:'Mortgage',personal_loan:'Personal Loan',student_loan:'Student Loan',medical:'Medical',other:'Other'};
+const DEBT_TYPE_ICONS = {credit_card:'💳',auto_loan:'🚗',mortgage:'🏠',personal_loan:'💰',student_loan:'🎓',medical:'🏥',other:'📋'};
+
+function renderDebts() {
+  const activeDebts = debts.filter(d => d.status === 'active');
+  const paidDebts = debts.filter(d => d.status === 'paid_off');
+  const totalDebt = activeDebts.reduce((s,d) => s + Number(d.current_balance), 0);
+  const totalMin = activeDebts.reduce((s,d) => s + Number(d.minimum_payment||0), 0);
+  const totalOriginal = activeDebts.reduce((s,d) => s + Number(d.original_balance||d.current_balance), 0);
+  const totalPaid = totalOriginal - totalDebt;
+  const paidPct = totalOriginal > 0 ? ((totalPaid / totalOriginal) * 100).toFixed(0) : 0;
+
+  document.getElementById('debt-summary').innerHTML = `
+    <div class="dash-card" style="position:relative"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--pink))"></div><div class="dash-label">Total Owed</div><div class="dash-value negative">${fmt(totalDebt)}</div></div>
+    <div class="dash-card" style="position:relative"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--red))"></div><div class="dash-label">Min Payments</div><div class="dash-value" style="color:var(--orange)">${fmt(totalMin)}/mo</div></div>
+    <div class="dash-card full" style="position:relative"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--teal))"></div><div class="dash-label">Overall Payoff Progress</div>
+      <div class="debt-track" style="margin:8px 0 4px"><div class="debt-fill" style="width:${paidPct}%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)"><span>${fmt(totalPaid)} paid</span><span>${paidPct}%</span><span>${fmt(totalOriginal)} total</span></div>
+    </div>
+  `;
+
+  let html = activeDebts.map(d => renderDebtCard(d)).join('');
+  if (paidDebts.length) {
+    html += `<div class="section-hdr" style="padding:12px 0 4px"><h2 style="color:var(--text3);font-size:14px">Paid Off</h2></div>`;
+    html += paidDebts.map(d => renderDebtCard(d)).join('');
+  }
+  document.getElementById('debts-list').innerHTML = html || '<div class="tx-empty">No debts tracked yet</div>';
+}
+
+function renderDebtCard(d) {
+  const orig = Number(d.original_balance) || Number(d.current_balance);
+  const cur = Number(d.current_balance);
+  const paid = orig - cur;
+  const pct = orig > 0 ? Math.min((paid / orig) * 100, 100) : 0;
+  const icon = DEBT_TYPE_ICONS[d.type] || '📋';
+  const typeLabel = DEBT_TYPE_LABELS[d.type] || 'Other';
+  const payments = debtPayments.filter(p => p.debt_id === d.id);
+  const totalPaidPayments = payments.reduce((s,p) => s + Number(p.amount), 0);
+  
+  // Payoff estimate: months = balance / min_payment (simplified, ignoring interest for display)
+  let payoffEst = '';
+  if (d.status === 'active' && Number(d.minimum_payment) > 0 && cur > 0) {
+    const monthlyRate = Number(d.interest_rate) / 100 / 12;
+    if (monthlyRate > 0) {
+      const months = Math.ceil(-Math.log(1 - (cur * monthlyRate / Number(d.minimum_payment))) / Math.log(1 + monthlyRate));
+      if (isFinite(months) && months > 0) {
+        const yrs = Math.floor(months / 12);
+        const mos = months % 12;
+        payoffEst = `Payoff: ~${yrs ? yrs + 'y ' : ''}${mos}mo`;
+      } else {
+        payoffEst = 'Min payment may not cover interest';
+      }
+    } else {
+      const months = Math.ceil(cur / Number(d.minimum_payment));
+      const yrs = Math.floor(months / 12);
+      const mos = months % 12;
+      payoffEst = `Payoff: ~${yrs ? yrs + 'y ' : ''}${mos}mo`;
+    }
+  }
+
+  return `<div class="debt-card" style="${d.status==='paid_off'?'opacity:.6':''}">
+    <div class="debt-card-top">
+      <div><div class="debt-name">${icon} ${d.name}</div><div class="debt-type">${typeLabel} <span class="debt-owner ${d.owner}">${d.owner}</span></div></div>
+      <div style="text-align:right"><div style="font-size:20px;font-weight:800;color:${d.status==='paid_off'?'var(--green)':'var(--red)'}">${d.status==='paid_off'?'PAID ✓':fmt(cur)}</div></div>
+    </div>
+    <div class="debt-stats">
+      <div><div class="debt-stat-label">APR</div><div class="debt-stat-value">${Number(d.interest_rate).toFixed(1)}%</div></div>
+      <div><div class="debt-stat-label">Min Payment</div><div class="debt-stat-value">${fmt(d.minimum_payment)}</div></div>
+      <div><div class="debt-stat-label">Due Day</div><div class="debt-stat-value">${d.due_day || '—'}</div></div>
+    </div>
+    ${orig > 0 ? `<div class="debt-progress">
+      <div class="debt-track"><div class="debt-fill" style="width:${pct}%"></div></div>
+      <div class="debt-progress-label"><span>${fmt(paid)} paid off</span><span>${pct.toFixed(0)}%</span></div>
+    </div>` : ''}
+    ${payoffEst ? `<div class="debt-payoff">⏱ ${payoffEst}</div>` : ''}
+    <div class="debt-actions">
+      ${d.status==='active' ? `<button class="debt-pay-btn" onclick="openDebtPaymentModal('${d.id}')">💵 Payment</button>` : ''}
+      ${d.status==='active' ? `<button class="debt-pay-btn" style="background:var(--teal)20;color:var(--teal)" onclick="openUpdateBalanceModal('${d.id}')">🔄 Balance</button>` : ''}
+      <button class="debt-edit-btn" onclick="openDebtModal('${d.id}')">✏️</button>
+      <button class="debt-edit-btn" onclick="viewDebtPayments('${d.id}')">📜</button>
+    </div>
+  </div>`;
+}
+
+function openDebtModal(id) {
+  const d = id ? debts.find(x => x.id === id) : null;
+  openModal(`
+    <div class="modal-title">${d ? 'Edit' : 'New'} Debt <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="debt-name" value="${d?.name||''}" placeholder="e.g. Chase Visa"></div>
+    <div class="form-group"><label class="form-label">Type</label>
+      <select class="form-input" id="debt-type">
+        ${Object.entries(DEBT_TYPE_LABELS).map(([k,v]) => `<option value="${k}" ${d?.type===k?'selected':''}>${v}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Current Balance</label><input class="form-input" id="debt-balance" type="number" step="0.01" value="${d?.current_balance||''}"></div>
+      <div class="form-group"><label class="form-label">Original Balance</label><input class="form-input" id="debt-original" type="number" step="0.01" value="${d?.original_balance||''}" placeholder="Optional"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Interest Rate (APR %)</label><input class="form-input" id="debt-apr" type="number" step="0.01" value="${d?.interest_rate||''}"></div>
+      <div class="form-group"><label class="form-label">Minimum Payment</label><input class="form-input" id="debt-minpay" type="number" step="0.01" value="${d?.minimum_payment||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Due Day of Month</label><input class="form-input" id="debt-due" type="number" min="1" max="31" value="${d?.due_day||1}"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-input" id="debt-status">
+          <option value="active" ${d?.status==='active'?'selected':''}>Active</option>
+          <option value="paid_off" ${d?.status==='paid_off'?'selected':''}>Paid Off</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Owner</label>
+      <div class="owner-pills">
+        <div class="owner-pill ${(!d||d.owner==='household')?'active':''}" onclick="pickOwner(this,'debt-owner')" data-val="household">🏠</div>
+        <div class="owner-pill ${d?.owner==='bob'?'active':''}" onclick="pickOwner(this,'debt-owner')" data-val="bob">👨</div>
+        <div class="owner-pill ${d?.owner==='elle'?'active':''}" onclick="pickOwner(this,'debt-owner')" data-val="elle">👩</div>
+      </div>
+      <input type="hidden" id="debt-owner" value="${d?.owner||'household'}">
+    </div>
+    <button class="form-submit" onclick="saveDebt('${id||''}')">${d ? 'Update' : 'Add'} Debt</button>
+    ${d ? `<button class="form-delete" onclick="deleteDebt('${id}')">Delete Debt</button>` : ''}
+  `);
+}
+
+async function saveDebt(id) {
+  const data = {
+    name: document.getElementById('debt-name').value,
+    type: document.getElementById('debt-type').value,
+    current_balance: parseFloat(document.getElementById('debt-balance').value) || 0,
+    original_balance: parseFloat(document.getElementById('debt-original').value) || null,
+    interest_rate: parseFloat(document.getElementById('debt-apr').value) || 0,
+    minimum_payment: parseFloat(document.getElementById('debt-minpay').value) || 0,
+    due_day: parseInt(document.getElementById('debt-due').value) || 1,
+    status: document.getElementById('debt-status').value,
+    owner: document.getElementById('debt-owner').value
+  };
+  if (!data.name) { toast('Enter a name'); return; }
+  if (id) { await sb.update('debts', { id }, data); }
+  else { data.user_id = currentUser.id; await sb.insert('debts', data); }
+  closeModalForce(); toast('Saved ✓');
+  await loadAllData(); renderDebts(); renderDashboard();
+}
+
+async function deleteDebt(id) {
+  if (!confirm('Delete this debt and all its payments?')) return;
+  await sb.remove('debts', { id });
+  closeModalForce(); toast('Deleted');
+  await loadAllData(); renderDebts(); renderDashboard();
+}
+
+function openUpdateBalanceModal(debtId) {
+  const d = debts.find(x => x.id === debtId);
+  if (!d) return;
+  openModal(`
+    <div class="modal-title">Update Balance — ${d.name} <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div style="color:var(--text2);font-size:13px;margin-bottom:12px">Current balance: <b style="color:var(--red)">${fmt(d.current_balance)}</b></div>
+    <div class="form-group"><label class="form-label">New Balance</label><input class="form-input" id="ub-amount" type="number" step="0.01" inputmode="decimal" value="${Number(d.current_balance).toFixed(2)}"></div>
+    <button class="form-submit" onclick="saveUpdatedBalance('${debtId}')">Update Balance</button>
+  `);
+  setTimeout(() => { const el = document.getElementById('ub-amount'); el?.focus(); el?.select(); }, 300);
+}
+
+async function saveUpdatedBalance(debtId) {
+  const val = parseFloat(document.getElementById('ub-amount').value);
+  if (isNaN(val) || val < 0) { toast('Enter a valid amount'); return; }
+  const upd = { current_balance: val };
+  if (val === 0) upd.status = 'paid_off';
+  await sb.update('debts', { id: debtId }, upd);
+  closeModalForce(); toast('Balance updated ✓');
+  await loadAllData(); renderDebts(); renderDashboard();
+}
+
+function openDebtPaymentModal(debtId) {
+  const d = debts.find(x => x.id === debtId);
+  openModal(`
+    <div class="modal-title">Log Payment — ${d?.name||'Debt'} <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-group"><label class="form-label">Amount</label><input class="form-input" id="dp-amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+    <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="dp-date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+    <div class="form-group"><label class="form-label">Note</label><input class="form-input" id="dp-note" placeholder="Optional"></div>
+    <button class="form-submit" onclick="saveDebtPayment('${debtId}')">Log Payment</button>
+  `);
+  setTimeout(() => document.getElementById('dp-amount')?.focus(), 300);
+}
+
+async function saveDebtPayment(debtId) {
+  const amount = parseFloat(document.getElementById('dp-amount').value);
+  if (!amount) { toast('Enter an amount'); return; }
+  await sb.insert('debt_payments', {
+    user_id: currentUser.id,
+    debt_id: debtId,
+    amount,
+    payment_date: document.getElementById('dp-date').value,
+    note: document.getElementById('dp-note').value || null
+  });
+  // Update debt balance
+  const debt = debts.find(d => d.id === debtId);
+  if (debt) {
+    const newBal = Math.max(0, Number(debt.current_balance) - amount);
+    const upd = { current_balance: newBal };
+    if (newBal === 0) upd.status = 'paid_off';
+    await sb.update('debts', { id: debtId }, upd);
+  }
+  closeModalForce(); toast('Payment logged ✓');
+  await loadAllData(); renderDebts(); renderDashboard();
+}
+
+function viewDebtPayments(debtId) {
+  const d = debts.find(x => x.id === debtId);
+  const payments = debtPayments.filter(p => p.debt_id === debtId);
+  const total = payments.reduce((s,p) => s + Number(p.amount), 0);
+  const html = payments.length 
+    ? payments.map(p => `<div class="debt-payment-item"><div><span class="dp-amount">${fmt(p.amount)}</span> <span class="dp-note">${p.note||''}</span></div><span class="dp-date">${p.payment_date}</span></div>`).join('')
+    : '<div class="tx-empty">No payments recorded</div>';
+  openModal(`
+    <div class="modal-title">Payments — ${d?.name||'Debt'} <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div style="margin-bottom:12px;font-size:14px;color:var(--text2)">Total paid: <b style="color:var(--green)">${fmt(total)}</b></div>
+    ${html}
+  `);
+}
+
+// ============ PAYMENT METHODS ============
+function renderPaymentMethods() {
+  const html = paymentMethods.map(p => `
+    <div class="tx-item" onclick="openPaymentMethodModal('${p.id}')" style="${p.is_active?'':'opacity:.5'}">
+      <div class="tx-icon" style="background:var(--teal)20;font-size:20px">${PM_TYPE_ICONS[p.type]||'💳'}</div>
+      <div class="tx-info">
+        <div class="tx-desc">${p.name}${p.last_four?' ···'+p.last_four:''}</div>
+        <div class="tx-meta"><span class="tx-owner ${p.owner}">${p.owner}</span><span>${PM_TYPE_LABELS[p.type]||p.type}</span>${p.is_active?'':'<span style="color:var(--red)">Archived</span>'}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('pm-list').innerHTML = html || '<div class="tx-empty">No payment methods. Seed defaults or add one.</div>';
+}
+
+function openPaymentMethodModal(id) {
+  const pm = id ? paymentMethods.find(p => p.id === id) : null;
+  openModal(`
+    <div class="modal-title">${pm ? 'Edit' : 'New'} Payment Method <span class="modal-close" onclick="closeModalForce()">✕</span></div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="pm-name" value="${pm?.name||''}" placeholder="e.g. Chase Visa"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-input" id="pm-type">
+          ${Object.entries(PM_TYPE_LABELS).map(([k,v]) => `<option value="${k}" ${pm?.type===k?'selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Last 4 Digits</label><input class="form-input" id="pm-last4" value="${pm?.last_four||''}" maxlength="4" placeholder="Optional"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Owner</label>
+      <div class="owner-pills">
+        <div class="owner-pill ${(!pm||pm.owner==='household')?'active':''}" onclick="pickOwner(this,'pm-owner')" data-val="household">🏠</div>
+        <div class="owner-pill ${pm?.owner==='bob'?'active':''}" onclick="pickOwner(this,'pm-owner')" data-val="bob">👨</div>
+        <div class="owner-pill ${pm?.owner==='elle'?'active':''}" onclick="pickOwner(this,'pm-owner')" data-val="elle">👩</div>
+      </div>
+      <input type="hidden" id="pm-owner" value="${pm?.owner||'household'}">
+    </div>
+    <button class="form-submit" onclick="savePaymentMethod('${id||''}')">${pm ? 'Update' : 'Add'}</button>
+    ${pm ? `<button class="form-delete" onclick="toggleArchivePM('${id}',${!pm.is_active})">${pm.is_active ? 'Archive' : 'Reactivate'}</button>` : ''}
+    ${pm ? `<button class="form-delete" onclick="deletePaymentMethod('${id}')">Delete</button>` : ''}
+  `);
+}
+
+async function savePaymentMethod(id) {
+  const data = {
+    name: document.getElementById('pm-name').value,
+    type: document.getElementById('pm-type').value,
+    last_four: document.getElementById('pm-last4').value || null,
+    owner: document.getElementById('pm-owner').value
+  };
+  if (!data.name) { toast('Enter a name'); return; }
+  if (data.last_four && data.last_four.length !== 4) { toast('Last 4 must be exactly 4 digits'); return; }
+  if (id) { await sb.update('payment_methods', { id }, data); }
+  else { data.user_id = currentUser.id; data.is_active = true; await sb.insert('payment_methods', data); }
+  closeModalForce(); toast('Saved ✓');
+  await loadAllData(); renderPaymentMethods();
+}
+
+async function toggleArchivePM(id, active) {
+  await sb.update('payment_methods', { id }, { is_active: active });
+  closeModalForce(); toast(active ? 'Reactivated ✓' : 'Archived ✓');
+  await loadAllData(); renderPaymentMethods();
+}
+
+async function deletePaymentMethod(id) {
+  if (!confirm('Delete this payment method?')) return;
+  await sb.remove('payment_methods', { id });
+  closeModalForce(); toast('Deleted');
+  await loadAllData(); renderPaymentMethods();
+}
+
+async function seedPaymentMethods() {
+  if (!confirm('Add default payment methods?')) return;
+  try {
+    await sb.rpc('seed_default_payment_methods', { p_user_id: currentUser.id });
+    toast('Payment methods seeded ✓');
+    await loadAllData(); renderPaymentMethods();
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+// ============ TOAST ============
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============ BOOT ============
+initSupabase();
+</script>
+</body>
+</html>
