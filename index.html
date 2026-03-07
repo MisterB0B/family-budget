@@ -331,6 +331,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
           <div class="settings-item"><span>Seed Default Categories</span><button onclick="seedCategories()">Seed</button></div>
           <div class="settings-item"><span>Seed Default Payment Methods</span><button onclick="seedPaymentMethods()">Seed</button></div>
           <div class="settings-item"><span>Generate Recurring for This Month</span><button onclick="generateRecurring()">Generate</button></div>
+          <div class="settings-item"><span>Reconfigure Supabase</span><button onclick="reconfigureSupabase()">Reconfigure</button></div>
           <div class="settings-item"><span>Sign Out</span><button onclick="signOut()">Sign Out</button></div>
         </div>
         <div class="section-hdr"><h2>Payment Methods</h2><button onclick="openPaymentMethodModal()">+ Add</button></div>
@@ -365,15 +366,38 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 <script>
 // ============ CONFIG ============
 const STORAGE_KEY = 'family_budget_config';
-let CONFIG = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+let CONFIG = null;
+
+// Load config from localStorage with error handling
+try {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  console.log('[Config] Raw from localStorage:', raw);
+  if (raw && raw !== 'null' && raw !== 'undefined') {
+    CONFIG = JSON.parse(raw);
+    if (!CONFIG || !CONFIG.url || !CONFIG.key) {
+      console.warn('[Config] Invalid config structure, resetting:', CONFIG);
+      CONFIG = null;
+    } else {
+      console.log('[Config] Loaded successfully:', CONFIG.url);
+    }
+  }
+} catch(e) {
+  console.error('[Config] Failed to load from localStorage:', e);
+  CONFIG = null;
+}
 
 function showConfigPrompt() {
-  if (CONFIG) return false;
+  if (CONFIG && CONFIG.url && CONFIG.key) {
+    console.log('[Config] Already configured, skipping prompt');
+    return false;
+  }
+  console.log('[Config] Showing setup prompt');
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-title">Setup <span class="modal-close" onclick="closeModalForce()">✕</span></div>
     <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Enter your Supabase project credentials. Find them in Project Settings → API.</p>
     <div class="form-group"><label class="form-label">Supabase URL</label><input class="form-input" id="cfg-url" placeholder="https://xxxxx.supabase.co"></div>
     <div class="form-group"><label class="form-label">Anon Key</label><input class="form-input" id="cfg-key" placeholder="eyJ..."></div>
+    <div id="cfg-error" style="color:var(--red);font-size:13px;margin-top:8px;min-height:20px"></div>
     <button class="form-submit" onclick="saveConfig()">Save & Continue</button>
   `;
   document.getElementById('modal-overlay').classList.add('active');
@@ -381,13 +405,56 @@ function showConfigPrompt() {
 }
 
 function saveConfig() {
-  const url = document.getElementById('cfg-url').value.trim().replace(/\/$/,'');
-  const key = document.getElementById('cfg-key').value.trim();
-  if (!url || !key) return toast('Please fill in both fields');
+  const urlEl = document.getElementById('cfg-url');
+  const keyEl = document.getElementById('cfg-key');
+  const errEl = document.getElementById('cfg-error');
+
+  if (!urlEl || !keyEl) {
+    console.error('[Config] Form elements not found!');
+    return;
+  }
+
+  const url = urlEl.value.trim().replace(/\/$/,'');
+  const key = keyEl.value.trim();
+
+  if (!url || !key) {
+    if (errEl) errEl.textContent = 'Please fill in both fields';
+    return toast('Please fill in both fields');
+  }
+
+  if (!url.startsWith('https://') || !url.includes('.supabase.co')) {
+    if (errEl) errEl.textContent = 'URL should be like https://xxxxx.supabase.co';
+    return;
+  }
+
   CONFIG = { url, key };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
+  const configJson = JSON.stringify(CONFIG);
+
+  try {
+    localStorage.setItem(STORAGE_KEY, configJson);
+    // Verify it was actually saved
+    const verify = localStorage.getItem(STORAGE_KEY);
+    if (verify !== configJson) {
+      console.error('[Config] Verification failed! Saved:', configJson, 'Got back:', verify);
+      if (errEl) errEl.textContent = 'Failed to save config. Check browser privacy settings.';
+      return;
+    }
+    console.log('[Config] Saved and verified successfully');
+  } catch(e) {
+    console.error('[Config] localStorage.setItem failed:', e);
+    if (errEl) errEl.textContent = 'Cannot save: ' + e.message + '. Are you in private browsing?';
+    return;
+  }
+
   closeModalForce();
+  toast('Config saved ✓');
   initSupabase();
+}
+
+function reconfigureSupabase() {
+  CONFIG = null;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  showConfigPrompt();
 }
 
 // ============ SUPABASE CLIENT (lightweight) ============
