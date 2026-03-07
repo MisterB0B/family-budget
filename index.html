@@ -422,8 +422,8 @@ function saveConfig() {
     return toast('Please fill in both fields');
   }
 
-  if (!url.startsWith('https://') || !url.includes('.supabase.co')) {
-    if (errEl) errEl.textContent = 'URL should be like https://xxxxx.supabase.co';
+  if (!url.startsWith('https://')) {
+    if (errEl) errEl.textContent = 'URL must start with https://';
     return;
   }
 
@@ -627,6 +627,11 @@ async function handleAuth() {
   const errEl = document.getElementById('auth-error');
   errEl.textContent = '';
   if (!email || !pass) { errEl.textContent = 'Please fill in all fields'; return; }
+  if (!sb) {
+    errEl.textContent = 'Supabase not initialized. Please reconfigure in Settings or reload.';
+    console.error('[Auth] sb is null — CONFIG:', CONFIG);
+    return;
+  }
   try {
     let data;
     if (isSignUp) {
